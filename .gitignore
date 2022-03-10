@@ -1,6 +1,8 @@
 # Compiled class file
 *.class
 
+# Build Gradle
+build.gradle
 
 # Build Files
 build/
