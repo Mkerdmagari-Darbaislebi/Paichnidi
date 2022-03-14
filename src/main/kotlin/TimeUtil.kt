@@ -14,10 +14,10 @@ class TimeUtil
     var timer = System.currentTimeMillis()
 
     // util function to handle start time conversion
-    fun startTime(): Long {
+    fun currentTime(): Long {
         return System.nanoTime();
     }
-    
+
 }
 
 
