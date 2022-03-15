@@ -1,6 +1,8 @@
-class TimeUtil
+package Util
+
+class Time
 {
-    //Constants for Time util
+
     val MAX_FPS = 60
     val MAX_UPS = 60
 
@@ -13,7 +15,7 @@ class TimeUtil
     var updates:Int = 0
     var timer = System.currentTimeMillis()
 
-    // util function to handle start time conversion
+
     fun currentTime(): Long {
         return System.nanoTime();
     }
