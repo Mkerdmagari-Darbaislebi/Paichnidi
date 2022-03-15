@@ -16,8 +16,8 @@ class Time
     var timer = System.currentTimeMillis()
 
 
-    fun currentTime(): Long {
-        return System.nanoTime();
+    fun currentTime(): Double {
+        return System.nanoTime().toDouble();
     }
 
 }

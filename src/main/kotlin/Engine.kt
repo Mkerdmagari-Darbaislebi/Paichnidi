@@ -11,15 +11,13 @@ import org.lwjgl.system.MemoryUtil
 class Engine {
 
     private var window:Long = 0;
-    private var runing:Boolean = true;
+    private var running:Boolean = true;
     private var time : Time = Time()
 
-    private var lastFPS : Double = 0.0
     private var lastUPS : Double = 0.0
-    private var lastFPSUPSout : Long = 0
+    private var lastFPSUPSout : Double = 0.0
 
-    private var FPS : Long = 0
-    private var UPS : Long = 0
+    private var UPS : Double = 0.0
 
     private var EngineThread : Thread = Thread(Runnable { run() })
 
@@ -32,7 +30,7 @@ class Engine {
     }
 
     fun stop(){
-        runing = false
+        running = false
         // Free the window callbacks and destroy the window
         Callbacks.glfwFreeCallbacks(window)
         GLFW.glfwDestroyWindow(window)
@@ -43,7 +41,7 @@ class Engine {
     }
 
      fun start(){
-         runing = true
+         running = true
          EngineThread.run()
     }
 
@@ -113,14 +111,13 @@ class Engine {
     }
 
     private fun loop(){
-        while (runing){
-            var passedTime:Double = time.currentTime().toDouble() - lastUPS
+        while (running){
+            var passedTime:Double = time.currentTime() - lastUPS
             var renderLock : Boolean = false
             if (GLFW.glfwWindowShouldClose(window)) stop()
             if (System.nanoTime() - lastFPSUPSout > 1000000000) {
-                println("FPS: " + FPS.toDouble())
-                println("UPS: " + UPS.toDouble())
-                UPS = 0
+                println("FPS: " + UPS)
+                UPS = 0.0
                 lastFPSUPSout = time.currentTime()
             }
 
@@ -130,7 +127,7 @@ class Engine {
                 UPS++
                 passedTime -= time.UPDATE_CAP
             }
-            lastUPS = time.currentTime().toDouble() - passedTime
+            lastUPS = time.currentTime() - passedTime
             if (renderLock) render()
             clean()
         }
