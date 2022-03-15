@@ -6,8 +6,8 @@ class Time
     val MAX_FPS = 60
     val MAX_UPS = 60
 
-    val fOPTIMAL_TIME = (1000000000 / MAX_FPS).toDouble()
-    val uOPTIMAL_TIME = (1000000000 / MAX_UPS).toDouble()
+    val UPDATE_CAP = (1000000000 / MAX_FPS).toDouble()
+    val RENDER_CAP = (1000000000 / MAX_UPS).toDouble()
 
     var uDeltaTime = 0.0
     var fDeltaTime:kotlin.Double = 0.0

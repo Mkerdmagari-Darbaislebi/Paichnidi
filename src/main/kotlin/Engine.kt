@@ -1,3 +1,4 @@
+import Util.Time
 import org.lwjgl.Version
 import org.lwjgl.glfw.Callbacks
 import org.lwjgl.glfw.GLFW
@@ -7,18 +8,20 @@ import org.lwjgl.opengl.GL11
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
 
-class EngineLoop {
+class Engine {
 
     private var window:Long = 0;
     private var runing:Boolean = true;
-    private var timeUtil : TimeUtil = TimeUtil()
+    private var time : Time = Time()
 
-    private var lastFPS : Long = 0
-    private var lastUPS : Long = 0
+    private var lastFPS : Double = 0.0
+    private var lastUPS : Double = 0.0
     private var lastFPSUPSout : Long = 0
 
     private var FPS : Long = 0
     private var UPS : Long = 0
+
+    private var EngineThread : Thread = Thread(Runnable { run() })
 
     private fun run() {
         println("Hello LWJGL " + Version.getVersion() + "!")
@@ -26,8 +29,6 @@ class EngineLoop {
         GL.createCapabilities()
         GL11.glClearColor(1.0f, 0.0f, 0.0f, 0.0f)
         loop()
-
-
     }
 
     fun stop(){
@@ -42,8 +43,8 @@ class EngineLoop {
     }
 
      fun start(){
-        runing = true
-         run()
+         runing = true
+         EngineThread.run()
     }
 
     private fun render(){
@@ -113,25 +114,24 @@ class EngineLoop {
 
     private fun loop(){
         while (runing){
+            var passedTime:Double = time.currentTime().toDouble() - lastUPS
+            var renderLock : Boolean = false
             if (GLFW.glfwWindowShouldClose(window)) stop()
             if (System.nanoTime() - lastFPSUPSout > 1000000000) {
                 println("FPS: " + FPS.toDouble())
                 println("UPS: " + UPS.toDouble())
-                FPS = 0
                 UPS = 0
-                lastFPSUPSout = timeUtil.currentTime()
-            }
-            if ((timeUtil.currentTime() - lastUPS) > timeUtil.fOPTIMAL_TIME){
-                lastUPS = timeUtil.currentTime()
-                update()
-                UPS++
+                lastFPSUPSout = time.currentTime()
             }
 
-            if ((timeUtil.currentTime() - lastFPS) > timeUtil.uOPTIMAL_TIME){
-                lastFPS = timeUtil.currentTime()
-                render()
-                FPS++
+            while ((passedTime) >= time.UPDATE_CAP){
+                update()
+                renderLock = true
+                UPS++
+                passedTime -= time.UPDATE_CAP
             }
+            lastUPS = time.currentTime().toDouble() - passedTime
+            if (renderLock) render()
             clean()
         }
     }
@@ -139,7 +139,7 @@ class EngineLoop {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            EngineLoop().start()
+            Engine().start()
         }
     }
 
