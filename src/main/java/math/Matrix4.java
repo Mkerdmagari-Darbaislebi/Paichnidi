@@ -1,6 +1,7 @@
 package math;
 
 public class Matrix4 {
+
     private int[][] matrix;
 
     public Matrix4(int[][] m) {
