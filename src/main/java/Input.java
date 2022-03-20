@@ -13,6 +13,12 @@ public class Input extends GLFWKeyCallback{
 
     //LUKA, DONT FORGET THIS!
 
+    //inside main class:
+    //  private GLFWKeyCallback keyCallback; (attribute)
+
+    //inside main init() method:
+    //  glfwSetKeyCallback(window, keyCallback = new Input());
+
     //inside main update() method:
     //  glfwPollEvents();
     //  if(Input.keys[GLFW_KEY_SPACE])
