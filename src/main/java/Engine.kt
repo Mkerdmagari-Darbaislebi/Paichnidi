@@ -133,6 +133,7 @@ class Engine {
 
 fun main(): Unit = runBlocking {
     launch(Dispatchers.Default) {
+        println(Thread.currentThread().name)
         Engine().start()
     }
 }
