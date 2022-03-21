@@ -1,44 +1,43 @@
 package math;
 
-public class Matrix4 {
+public class Matrix4f {
 
-    private int[][] matrix;
+    private float[][] matrix;
 
-    public Matrix4(int[][] m) {
+    public Matrix4f(float[][] m) {
         this.matrix = m;
     }
 
-    public int[][] getMatrix4() {
+    public float[][] getMatrix4() {
         return matrix;
     }
 
-    public void setMatrix4(int[][] m) {
+    public void setMatrix4(float[][] m) {
         this.matrix = m;
     }
 
-    public int[][] identity4() {
-        int[][] im = new int[4][4];
+    public float[][] identity4() {
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
                 if (i == j)
-                    im[i][j] = 1;
+                    this.matrix[i][j] = 1;
                 else
-                    im[i][j] = 0;
-        return im;
+                    this.matrix[i][j] = 0;
+        return this.matrix;
     }
 
-    public void setValue(int value, int x, int y){
+    public void setValue(float value, int x, int y){
         this.matrix[x][y] = value;
     }
 
-    public void setRow(int rowIndex, int[] row){
+    public void setRow(int rowIndex, float[] row){
         for(int i = 0; i < 4; i++)
             for(int j = 0; j < 4; j++)
                 if(i == rowIndex)
                     this.matrix[i][j] = row[j];
     }
 
-    public void setColumn(int columnIndex, int[] column){
+    public void setColumn(int columnIndex, float[] column){
         for(int i = 0; i < 4; i++)
             for(int j = 0; j < 4; j++)
                 if(j == columnIndex)
