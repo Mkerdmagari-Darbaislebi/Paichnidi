@@ -4,6 +4,10 @@ public class Matrix4f {
 
     private float[][] matrix;
 
+    public Matrix4f() {
+
+    }
+
     public Matrix4f(float[][] m) {
         this.matrix = m;
     }
@@ -16,14 +20,15 @@ public class Matrix4f {
         this.matrix = m;
     }
 
-    public float[][] identity4() {
+    public static Matrix4f identity4() {
+        Matrix4f im = new Matrix4f();
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
                 if (i == j)
-                    this.matrix[i][j] = 1;
+                    im.matrix[i][j] = 1;
                 else
-                    this.matrix[i][j] = 0;
-        return this.matrix;
+                    im.matrix[i][j] = 0;
+        return im;
     }
 
     public void setValue(float value, int x, int y){
