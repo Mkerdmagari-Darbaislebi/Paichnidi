@@ -11,11 +11,4 @@ public class Input extends GLFWKeyCallback{
         keys[key] = action != GLFW_RELEASE;
     }
 
-
-
-
-
-
-
-
 }
