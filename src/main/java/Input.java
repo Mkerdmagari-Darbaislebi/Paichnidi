@@ -11,22 +11,6 @@ public class Input extends GLFWKeyCallback{
         keys[key] = action != GLFW_RELEASE;
     }
 
-    //LUKA, DONT FORGET THIS!
-
-    //inside main class:
-    //  private GLFWKeyCallback keyCallback; (attribute)
-
-    //inside main init() method:
-    //  glfwSetKeyCallback(window, keyCallback = new Input());
-
-    //inside main update() method:
-    //  glfwPollEvents();
-    //  if(Input.keys[GLFW_KEY_SPACE])
-    //      {whatever happens after pressing SPACE}
-
-    //at the end of main run() method:
-    //  keyCallback.release();
-
 
 
 
