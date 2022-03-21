@@ -1,4 +1,0 @@
-package math
-
-interface INTERFACE {
-}
