@@ -4,7 +4,7 @@ abstract class MatrixBuilder(
     protected val firstDimension: Int,
     protected val secondDimension: Int
 ) {
-    var array = Array(firstDimension) { Array(secondDimension) { .0f } }
+    var array = Array(firstDimension) { Array(secondDimension) { .0 } }
 
     val areDimensionsEqual = fun(matrixBuilder: MatrixBuilder) =
         firstDimension == matrixBuilder.firstDimension &&
@@ -35,9 +35,9 @@ abstract class MatrixBuilder(
     }
 
 
-    fun dotProduct(matrixBuilder: MatrixBuilder): Float? {
+    fun dotProduct(matrixBuilder: MatrixBuilder): Double? {
         if (areDimensionsEqual(matrixBuilder)) {
-            var result = .0f
+            var result = .0
             for (i in 0 until firstDimension)
                 for (j in 0 until secondDimension)
                     result += array[i][j] * matrixBuilder.array[i][j]
