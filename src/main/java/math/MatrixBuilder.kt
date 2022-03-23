@@ -1,14 +1,28 @@
 package math
 
 abstract class MatrixBuilder(
-    protected val firstDimension: Int,
-    protected val secondDimension: Int
+    private var array: Array<Array<Double>> = Array(0) { Array(0) { .0 } }
 ) {
-    var array = Array(firstDimension) { Array(secondDimension) { .0 } }
+
+    private val firstDimension: Int
+        get() = array.size
+
+    private val secondDimension: Int
+        get() = array[0].size
 
     val areDimensionsEqual = fun(matrixBuilder: MatrixBuilder) =
         firstDimension == matrixBuilder.firstDimension &&
                 secondDimension == matrixBuilder.secondDimension
+
+    operator fun plusAssign(matrixBuilder: MatrixBuilder) {
+        if (areDimensionsEqual(matrixBuilder))
+            array = (this + matrixBuilder)!!.array
+    }
+
+    operator fun minusAssign(matrixBuilder: MatrixBuilder) {
+        if (areDimensionsEqual(matrixBuilder))
+            array = (this - matrixBuilder)!!.array
+    }
 
     operator fun plus(matrixBuilder: MatrixBuilder): MatrixBuilder? {
         if (areDimensionsEqual(matrixBuilder)) {
