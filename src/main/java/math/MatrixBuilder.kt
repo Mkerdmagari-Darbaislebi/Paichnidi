@@ -10,10 +10,28 @@ abstract class MatrixBuilder(
     private val secondDimension: Int
         get() = array[0].size
 
-    val areDimensionsEqual = fun(matrixBuilder: MatrixBuilder) =
+    private val areDimensionsEqual = fun(matrixBuilder: MatrixBuilder) =
         firstDimension == matrixBuilder.firstDimension &&
                 secondDimension == matrixBuilder.secondDimension
 
+    protected val areCoordinatesInBoundaries = fun(x: Int, y: Int) =
+        x in 0..firstDimension && y in 0..secondDimension
+
+
+    // operations on scalars
+    abstract operator fun plusAssign(scalar: Double)
+
+    abstract operator fun minusAssign(scalar: Double)
+
+    abstract operator fun plus(scalar: Double): MatrixBuilder
+
+    abstract operator fun minus(scalar: Double): MatrixBuilder
+
+    abstract operator fun inc(): MatrixBuilder
+
+    abstract operator fun dec(): MatrixBuilder
+
+    // operations on MatrixBuilder-s
     operator fun plusAssign(matrixBuilder: MatrixBuilder) {
         if (areDimensionsEqual(matrixBuilder))
             array = (this + matrixBuilder)!!.array
@@ -47,7 +65,6 @@ abstract class MatrixBuilder(
         }
         return null
     }
-
 
     fun dotProduct(matrixBuilder: MatrixBuilder): Double? {
         if (areDimensionsEqual(matrixBuilder)) {
