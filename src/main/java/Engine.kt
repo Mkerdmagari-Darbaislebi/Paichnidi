@@ -48,14 +48,7 @@ class Engine {
         mainWindow.createWindow()
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        GLFW.glfwSetKeyCallback(
-            mainWindow.window
-        ) { window: Long, key: Int, _: Int, action: Int, _: Int ->
-            if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE) GLFW.glfwSetWindowShouldClose(
-                window,
-                true
-            )
-        }
+        mainWindow.setKeyCallBack()
 
         MemoryStack.stackPush().also { stack ->
             val pWidth = stack.mallocInt(1) // int*

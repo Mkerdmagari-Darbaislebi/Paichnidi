@@ -14,6 +14,8 @@ class Window(
 ) {
     var window = 0L
 
+    private val inputKeyCallback: Input = Input()
+
     init {
         check(GLFW.glfwInit()) { "Unable to initialize" }
     }
@@ -63,6 +65,16 @@ class Window(
         setHiddenAfterCreation()
         setResizable()
     }
+
+    fun setKeyCallBack() =
+        GLFW.glfwSetKeyCallback(window) { window: Long, key: Int,
+                                          scancode: Int, action: Int,
+                                          mods: Int ->
+            inputKeyCallback.invoke(
+                window, key, scancode,
+                action, mods
+            )
+        }
 
     private fun setDefaultWindowHints() = GLFW.glfwDefaultWindowHints()
 
