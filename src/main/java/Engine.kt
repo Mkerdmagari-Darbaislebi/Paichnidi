@@ -2,7 +2,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.lwjgl.Version
-import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11
 import org.lwjgl.system.MemoryStack
@@ -14,7 +13,6 @@ const val TITLE: String = "Title"
 
 class Engine {
 
-    private var mainWindow = Window(WIDTH, HEIGHT, TITLE)
     private var running: Boolean = true
 
     private var lastUPS: Double = 0.0
@@ -28,7 +26,7 @@ class Engine {
         println("Hello LWJGL ${Version.getVersion()}!")
         init()
         GL.createCapabilities()
-        GL11.glClearColor(1.0f, 0.0f, 0.0f, 0.0f)
+        GL11.glClearColor(1.0f, 1.0f, 0.0f, 0.0f)
         loop()
     }
 
@@ -42,41 +40,40 @@ class Engine {
         Window.setupErrorCallback(System.err)
 
         // Configure GLFW
-        mainWindow.configure()
+        Window.configure()
 
         // Create the window
-        mainWindow.createWindow()
+        Window.createWindow()
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        mainWindow.setKeyCallBack()
+        Window.setKeyCallBack()
 
         MemoryStack.stackPush().also { stack ->
             val pWidth = stack.mallocInt(1) // int*
             val pHeight = stack.mallocInt(1) // int*
 
             // Get the window size passed to glfwCreateWindow
-            mainWindow.getWindowSize(pWidth, pHeight)
+            Window.getWindowSize(pWidth, pHeight)
 
             // Center the window
-            mainWindow.centerWindow(pWidth, pHeight)
+            Window.centerWindow(pWidth, pHeight)
         }
 
         // Make the OpenGL context current
-        mainWindow.makeContextCurrent()
+        Window.makeContextCurrent()
 
         // Enable v-sync
-        mainWindow.enableVSync()
+        Window.enableVSync()
 
         // Make the window visible
-        mainWindow.showWindow()
+        Window.showWindow()
     }
 
     private fun loop() {
         while (running) {
             var passedTime: Double = Time.currentTime() - lastUPS
             var renderLock: Boolean = false
-            if (mainWindow.windowShouldClose())
-                mainWindow.stop()
+
 
             if (System.nanoTime() - lastFPSUPSout > 1000000000) {
                 println("FPS: $UPS")
@@ -85,15 +82,20 @@ class Engine {
             }
 
             while ((passedTime) >= Time.UPDATE_CAP) {
-                mainWindow.update()
+                Window.update()
                 renderLock = true
                 UPS++
                 passedTime -= Time.UPDATE_CAP
             }
             lastUPS = Time.currentTime() - passedTime
             if (renderLock)
-                mainWindow.render()
-            mainWindow.clean()
+                Window.render()
+            Window.clean()
+
+            if (Window.windowShouldClose()) {
+                running = false
+                Window.stop()
+            }
         }
     }
 }

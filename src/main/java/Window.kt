@@ -2,16 +2,11 @@ import org.lwjgl.glfw.Callbacks
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL11
-import org.lwjgl.system.Callback
 import org.lwjgl.system.MemoryUtil
 import java.io.PrintStream
 import java.nio.IntBuffer
 
-class Window(
-    private val WIDTH: Int,
-    private val HEIGHT: Int,
-    private val TITLE: String
-) {
+object Window {
     var window = 0L
 
     private val inputKeyCallback: Input = Input()
@@ -30,6 +25,8 @@ class Window(
     fun update() = GL11.glClear(GL11.GL_COLOR_BUFFER_BIT or GL11.GL_DEPTH_BUFFER_BIT)
 
     fun clean() = GLFW.glfwPollEvents()
+
+    fun setWindowShouldClose() = GLFW.glfwSetWindowShouldClose(window, true)
 
     fun stop() {
         freeCallbacks()
@@ -70,7 +67,7 @@ class Window(
         GLFW.glfwSetKeyCallback(window) { window: Long, key: Int,
                                           scancode: Int, action: Int,
                                           mods: Int ->
-            inputKeyCallback.invoke(
+            inputKeyCallback(
                 window, key, scancode,
                 action, mods
             )
@@ -94,8 +91,6 @@ class Window(
 
     private fun terminate() = GLFW.glfwTerminate()
 
-    companion object {
-        fun setupErrorCallback(ps: PrintStream): GLFWErrorCallback =
-            GLFWErrorCallback.createPrint(ps).set()
-    }
+    fun setupErrorCallback(ps: PrintStream): GLFWErrorCallback =
+        GLFWErrorCallback.createPrint(ps).set()
 }
