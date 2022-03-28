@@ -1,17 +1,19 @@
 package math
 
+import kotlin.math.sqrt
+
 class Quanternion(
-    private var x: Double,
-    private var y: Double,
-    private var z: Double,
-    private var w: Double
+    private var x: Float,
+    private var y: Float,
+    private var z: Float,
+    private var w: Float
 ) {
 
 
     fun normalize() = scaleDown(norm())
 
-    fun scaleDown(scale: Double): Quanternion {
-        if (scale != 1.0) {
+    fun scaleDown(scale: Float): Quanternion {
+        if (scale != 1.0f) {
             x /= scale
             y /= scale
             z /= scale
@@ -20,9 +22,9 @@ class Quanternion(
         return this
     }
 
-    fun length() = Math.sqrt(x * x + y * y + z * z + w * w)
+    fun length() = sqrt(x * x + y * y + z * z + w * w)
 
-    fun norm() = Math.sqrt(dotProduct(this))
+    fun norm() = sqrt(dotProduct(this))
 
     fun dotProduct(other: Quanternion) = x * other.x + y * other.y + z * other.z + w * other.w
 
@@ -48,19 +50,19 @@ class Quanternion(
     companion object {
 
         private val _IDENTITY_QUANTERNION
-                by lazy { Quanternion(1.0, .0, .0, .0) }
+                by lazy { Quanternion(1.0f, .0f, .0f, .0f) }
 
         private val _ZERO_QUANTERNION
-                by lazy { Quanternion(.0, .0, .0, .0) }
+                by lazy { Quanternion(.0f, .0f, .0f, .0f) }
 
         private val _I_QUANTERNION
-                by lazy { Quanternion(.0, 1.0, .0, .0) }
+                by lazy { Quanternion(.0f, 1.0f, .0f, .0f) }
 
         private val _J_QUANTERNION
-                by lazy { Quanternion(.0, .0, 1.0, .0) }
+                by lazy { Quanternion(.0f, .0f, 1.0f, .0f) }
 
         private val _K_QUANTERNION
-                by lazy { Quanternion(.0, .0, .0, 1.0) }
+                by lazy { Quanternion(.0f, .0f, .0f, 1.0f) }
 
         @JvmStatic
         val IDENTITY_QUANTERNION: Quanternion

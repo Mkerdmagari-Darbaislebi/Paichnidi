@@ -1,7 +1,7 @@
 package math
 
 abstract class MatrixBuilder(
-    private var array: Array<Array<Double>> = Array(0) { Array(0) { .0 } }
+    private var array: Array<Array<Float>> = Array(0) { Array(0) { .0f } }
 ) {
 
     private val firstDimension: Int
@@ -19,13 +19,13 @@ abstract class MatrixBuilder(
 
 
     // operations on scalars
-    abstract operator fun plusAssign(scalar: Double)
+    abstract operator fun plusAssign(scalar: Float)
 
-    abstract operator fun minusAssign(scalar: Double)
+    abstract operator fun minusAssign(scalar: Float)
 
-    abstract operator fun plus(scalar: Double): MatrixBuilder
+    abstract operator fun plus(scalar: Float): MatrixBuilder
 
-    abstract operator fun minus(scalar: Double): MatrixBuilder
+    abstract operator fun minus(scalar: Float): MatrixBuilder
 
     abstract operator fun inc(): MatrixBuilder
 
@@ -66,9 +66,9 @@ abstract class MatrixBuilder(
         return null
     }
 
-    fun dotProduct(matrixBuilder: MatrixBuilder): Double? {
+    fun dotProduct(matrixBuilder: MatrixBuilder): Float? {
         if (areDimensionsEqual(matrixBuilder)) {
-            var result = .0
+            var result = .0f
             for (i in 0 until firstDimension)
                 for (j in 0 until secondDimension)
                     result += array[i][j] * matrixBuilder.array[i][j]
