@@ -27,6 +27,7 @@ class Engine {
         init()
         GL.createCapabilities()
         GL11.glClearColor(1.0f, 1.0f, 0.0f, 0.0f)
+        lastUPS = Time.currentTime()
         loop()
     }
 
@@ -74,22 +75,29 @@ class Engine {
             var passedTime: Double = Time.currentTime() - lastUPS
             var renderLock: Boolean = false
 
-
-            if (System.nanoTime() - lastFPSUPSout > 1000000000) {
+//          Print FPS/UPS and reset value
+            if (Time.currentTime() - lastFPSUPSout > 1000000000) {
                 println("FPS: $UPS")
                 UPS = 0.0
                 lastFPSUPSout = Time.currentTime()
             }
 
+//          Update passedTime/UPDATE_CAP - times
             while ((passedTime) >= Time.UPDATE_CAP) {
                 Window.update()
                 renderLock = true
                 UPS++
                 passedTime -= Time.UPDATE_CAP
             }
+
+//          Capture the moment of the last update and UPS incrementation
             lastUPS = Time.currentTime() - passedTime
+
+//          Render if an update was performed
             if (renderLock)
                 Window.render()
+
+//          Process inputs
             Window.clean()
 
             if (Window.windowShouldClose()) {
