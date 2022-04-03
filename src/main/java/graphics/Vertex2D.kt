@@ -5,5 +5,5 @@ import math.Vector2f
 data class Vertex2D(
     val x: Float,
     val y: Float,
-    val color: Triple<Int, Int, Int>
+    val color: Color
 ) : Vector2f(x, y)
