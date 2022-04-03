@@ -5,7 +5,7 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class Vector3f(
+open class Vector3f(
     private var x: Float,
     private var y: Float,
     private var z:Float

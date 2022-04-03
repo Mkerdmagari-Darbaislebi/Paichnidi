@@ -5,7 +5,7 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class Vector2f(
+open class Vector2f(
     private var x: Float,
     private var y: Float
 ) : MatrixBuilder(arrayOf(arrayOf(x, y))) {
