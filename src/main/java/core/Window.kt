@@ -29,7 +29,7 @@ object Window {
     }
 
     fun render() {
-        MeshLoader.meshes.forEach { mesh -> mesh.draw() }
+        MeshLoader.load()
         GLFW.glfwSwapBuffers(window)
     }
 
