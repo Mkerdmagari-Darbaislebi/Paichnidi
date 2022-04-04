@@ -1,10 +1,8 @@
 package graphics
 
-import math.Vector3f
-
 data class Vertex3D(
     val x: Float,
     val y: Float,
     val z: Float,
     val color: Color
-) : Vector3f(x, y, z)
+) : VertexBuilder(arrayOf(x, y, z), color)
