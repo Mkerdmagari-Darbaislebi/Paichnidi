@@ -6,10 +6,10 @@ import kotlinx.coroutines.runBlocking
 
 class Game {
 
-    val vbList = mutableListOf<VertexBuilder>(
-        VertexBuilder(arrayOf(-.5f, -.5f), Color8Bit(255, 0,0,1f)),
-        VertexBuilder(arrayOf(.5f, -.5f), Color8Bit(255, 0,0,1f)),
-        VertexBuilder(arrayOf(.5f, -.0f), Color8Bit(255, 0,0,1f))
+    val vbList = mutableListOf(
+        Vertex(arrayOf(-.5f, -.5f, 0f), Color(255, 0,0,1f)),
+        Vertex(arrayOf(.5f, -.5f, 0f), Color(255, 0,0,1f)),
+        Vertex(arrayOf(.5f, -.0f, 0f), Color(255, 0,0,1f))
     )
 
     val mesh = Mesh(vbList)

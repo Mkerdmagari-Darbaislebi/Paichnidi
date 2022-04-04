@@ -3,10 +3,10 @@ package math
 import kotlin.math.cos
 import kotlin.math.sin
 
-open class Vector3f(
+open class Vector(
     private var x: Float,
     private var y: Float,
-    private var z: Float
+    private var z: Float = 0f
 ) : VectorBuilder(arrayOf(x, y, z)) {
 
     fun rotate(theta: Float) {

@@ -7,19 +7,18 @@ class Quanternion(
     private var y: Float,
     private var z: Float,
     private var w: Float
-) {
+) : VectorBuilder(arrayOf(x, y, z, w)) {
 
 
-    fun normalize() = scaleDown(norm())
+    override fun normalize() = scaleDown(norm())
 
-    fun scaleDown(scale: Float): Quanternion {
+    fun scaleDown(scale: Float) {
         if (scale != 1.0f) {
             x /= scale
             y /= scale
             z /= scale
             w /= scale
         }
-        return this
     }
 
     fun length() = sqrt(x * x + y * y + z * z + w * w)

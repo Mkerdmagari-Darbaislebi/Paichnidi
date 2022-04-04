@@ -13,7 +13,7 @@ open class VectorBuilder(
     val length: Int
         get() = scalars.size
 
-    fun normalize() {
+    open fun normalize() {
         val length = sqrt(scalars.reduce { acc, fl ->
             acc + fl * fl
         })
@@ -22,6 +22,7 @@ open class VectorBuilder(
         }.toTypedArray()
     }
 
+    // abstract members' implementation
     override fun plusAssign(scalar: Float) {
         this += VectorBuilder(length, scalar)
     }
