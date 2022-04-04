@@ -1,3 +1,7 @@
+package core
+
+import data.MeshLoader
+import input.KeyboardInput
 import org.lwjgl.glfw.Callbacks
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFWErrorCallback
@@ -9,18 +13,25 @@ import java.nio.IntBuffer
 object Window {
     var window = 0L
 
-    private val inputKeyCallback: Input = Input()
+    private val inputKeyCallback: KeyboardInput = KeyboardInput()
 
     init {
         check(GLFW.glfwInit()) { "Unable to initialize" }
     }
 
-    fun createWindow() {
+    fun createWindow(
+        WIDTH: Int,
+        HEIGHT: Int,
+        TITLE: String
+    ) {
         window = GLFW.glfwCreateWindow(WIDTH, HEIGHT, TITLE, MemoryUtil.NULL, MemoryUtil.NULL)
         if (window == MemoryUtil.NULL) throw RuntimeException("Failed to create window!")
     }
 
-    fun render() = GLFW.glfwSwapBuffers(window)
+    fun render() {
+        MeshLoader.meshes.forEach { mesh -> mesh.draw() }
+        GLFW.glfwSwapBuffers(window)
+    }
 
     fun update() = GL11.glClear(GL11.GL_COLOR_BUFFER_BIT or GL11.GL_DEPTH_BUFFER_BIT)
 
@@ -67,7 +78,7 @@ object Window {
         GLFW.glfwSetKeyCallback(window) { window: Long, key: Int,
                                           scancode: Int, action: Int,
                                           mods: Int ->
-            inputKeyCallback(
+            Window.inputKeyCallback(
                 window, key, scancode,
                 action, mods
             )

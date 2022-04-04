@@ -1,17 +1,16 @@
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+package core
+
 import org.lwjgl.Version
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11
 import org.lwjgl.system.MemoryStack
+import data.Constants
 import util.Time
 
-const val WIDTH: Int = 300
-const val HEIGHT: Int = 300
-const val TITLE: String = "Title"
-
-class Engine {
+object Engine {
+    val WIDTH: Int = Constants.WIDTH
+    val HEIGHT: Int = Constants.HEIGHT
+    val TITLE: String = Constants.TITLE
 
     private var running: Boolean = true
 
@@ -24,7 +23,6 @@ class Engine {
 
     private fun run() {
         println("Hello LWJGL ${Version.getVersion()}!")
-        init()
         GL.createCapabilities()
         GL11.glClearColor(1.0f, 1.0f, 0.0f, 0.0f)
         lastUPS = Time.currentTime()
@@ -36,7 +34,8 @@ class Engine {
         run()
     }
 
-    private fun init() {
+    init {
+
         // Setup an error callback
         Window.setupErrorCallback(System.err)
 
@@ -44,7 +43,7 @@ class Engine {
         Window.configure()
 
         // Create the window
-        Window.createWindow()
+        Window.createWindow(WIDTH, HEIGHT, TITLE)
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         Window.setKeyCallBack()
@@ -105,12 +104,5 @@ class Engine {
                 Window.stop()
             }
         }
-    }
-}
-
-fun main(): Unit = runBlocking {
-    launch(Dispatchers.Default) {
-        println(Thread.currentThread().name)
-        Engine().start()
     }
 }
