@@ -1,6 +1,4 @@
-package data
-
-import graphics.Mesh
+package graphics
 
 object MeshLoader {
     val meshes : MutableList<Mesh> = mutableListOf()
