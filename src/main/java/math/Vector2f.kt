@@ -1,9 +1,7 @@
 package math
 
 import kotlin.math.cos
-import kotlin.math.pow
 import kotlin.math.sin
-import kotlin.math.sqrt
 
 open class Vector2f(
     private var x: Float,

@@ -1,9 +1,12 @@
+package input
+
+import core.Window
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFW.GLFW_RELEASE
 import org.lwjgl.glfw.GLFWKeyCallback
 
 
-class Input : GLFWKeyCallback() {
+class KeyboardInput : GLFWKeyCallback() {
 
     val keys: Array<Boolean> = Array(65535) { false }
 
