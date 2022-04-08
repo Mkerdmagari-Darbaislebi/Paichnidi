@@ -1,6 +1,8 @@
 package core
 
+import data.Constants
 import graphics.loaders.MeshLoader
+import graphics.loaders.ShaderLoader
 import input.KeyboardInput
 import org.lwjgl.glfw.Callbacks
 import org.lwjgl.glfw.GLFW
@@ -30,6 +32,10 @@ object Window {
 
     fun render() {
         MeshLoader.load()
+        ShaderLoader.load(
+            Constants.VERTEX_SHADER,
+            Constants.FRAGMENT_SHADER
+        )
         GLFW.glfwSwapBuffers(window)
     }
 

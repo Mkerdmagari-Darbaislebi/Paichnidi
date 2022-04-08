@@ -1,11 +1,11 @@
 package graphics
 
-import math.VectorBuilder
+import math.Vector
 
 open class Vertex(
     private val scalars: Array<Float>,
     private val color: Color
-) : VectorBuilder(scalars) {
+) : Vector(scalars) {
 
     constructor(
         x: Float,
