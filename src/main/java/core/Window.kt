@@ -1,6 +1,6 @@
 package core
 
-import graphics.MeshLoader
+import graphics.loaders.MeshLoader
 import input.KeyboardInput
 import org.lwjgl.glfw.Callbacks
 import org.lwjgl.glfw.GLFW

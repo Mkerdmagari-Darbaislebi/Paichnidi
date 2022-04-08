@@ -1,5 +1,5 @@
 import core.Engine
-import graphics.MeshLoader
+import graphics.loaders.MeshLoader
 import graphics.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
