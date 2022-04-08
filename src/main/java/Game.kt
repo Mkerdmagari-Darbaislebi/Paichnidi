@@ -28,7 +28,7 @@ fun main(): Unit = runBlocking {
         Vertex(arrayOf(-.5f, 0f, 0f), Color(255, 0, 0, 1f))
     )
 
-    val meshes = listOf( Mesh(vbList2) )
+    val meshes = listOf(Mesh.objToMesh())
 
 
     val vsh = VertexShaders.SIMPLE_VERTEX_SHADER

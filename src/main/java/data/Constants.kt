@@ -13,4 +13,7 @@ object Constants {
     // Shader constants
     var VERTEX_SHADER = ""
     var FRAGMENT_SHADER = ""
+
+    const val PLY_HEADER_LENGTH = 15
+    const val PLY_MODEL_PATH ="C:\\Users\\student\\Desktop\\IntellijIDEA\\Igrushka\\Paichindi1\\Paichnidi\\src\\main\\java\\data\\meshModelFiles\\KacebisKaci.obj"
 }
