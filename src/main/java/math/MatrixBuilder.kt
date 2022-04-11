@@ -66,6 +66,17 @@ abstract class MatrixBuilder(
         return null
     }
 
+    operator fun times(matrixBuilder: MatrixBuilder): MatrixBuilder?{
+        if (areDimensionsEqual(matrixBuilder)){
+            for (e in 0 until firstDimension)
+                for (i in 0 until secondDimension)
+                    for (j in 0 until firstDimension)
+                       array[e][i] += array[i][j] * matrixBuilder.array[j][i]
+            return this
+        }
+        return null
+    }
+
     fun dotProduct(matrixBuilder: MatrixBuilder): Float? {
         if (areDimensionsEqual(matrixBuilder)) {
             var result = .0f
@@ -77,6 +88,7 @@ abstract class MatrixBuilder(
         }
         return null
     }
+
 
     fun flatten(): List<Float> {
         return array.flatten()
