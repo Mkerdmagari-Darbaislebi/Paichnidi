@@ -6,36 +6,43 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class Transformation(
-    private var translation : Vector = Vector(0.0f, 0.0f, 0.0f),
-    private var rotation : Vector = Vector(0.0f, 0.0f, 0.0f),
-    private var scale : Vector = Vector(1.0f, 1.0f, 1.0f)
+    private var _translation: Vector = Vector(0f),
+    private var _rotation: Vector = Vector(0f),
+    private var _scale: Vector = Vector(1.0f)
 ) {
 
-    val getTranslation get() = translation
-    fun setTranslation(vector : Vector) {translation = vector}
+    val translation
+        get() = _translation
 
-    val getRotation get() = rotation
-    fun setRotation (vector : Vector) {rotation = vector}
+    val scale
+        get() = _scale
 
-    val getScale get() = scale
-    fun setScale (vector : Vector) {scale = vector}
+    val rotation
+        get() = _rotation
 
-    fun getTransformation() : Matrix4f {
-        val translationMatrix = getTranslationMatrix(translation.x, translation.y, translation.z)
-        val rotationMatrix = getRotationMatrix(rotation.x, rotation.y, rotation.z)
-        val scaleMatrix = getScaleMatrix(scale.x, scale.y, scale.z)
+    fun setTranslation(vector: Vector) = run { _translation = vector }
+
+    fun setRotation(vector: Vector) = run { _rotation = vector }
+
+    fun setScale(vector: Vector) = run { _scale = vector }
+
+    fun getTransformationMatrix(): Matrix4f {
+        val translationMatrix = getTranslationMatrix(_translation.x, _translation.y, _translation.z)
+        val rotationMatrix = getRotationMatrix(_rotation.x, _rotation.y, _rotation.z)
+        val scaleMatrix = getScaleMatrix(_scale.x, _scale.y, _scale.z)
 
         return (translationMatrix * (rotationMatrix!! * scaleMatrix)!!) as Matrix4f
     }
 
     companion object {
+
         fun getTranslationMatrix(x: Float, y: Float, z: Float): Matrix4f {
             val matrix = Matrix4f.IDENTITY_MATRIX
             matrix.setColumn(3, arrayOf(x, y, z, 1.0f))
             return matrix
         }
 
-        fun getRotationMatrix(x: Float, y: Float, z: Float): Matrix4f? {
+        fun getRotationMatrix(x: Float, y: Float, z: Float): Matrix4f {
             val xRadians = Math.toRadians(x.toDouble()).toFloat()
             val yRadians = Math.toRadians(y.toDouble()).toFloat()
             val zRadians = Math.toRadians(z.toDouble()).toFloat()
@@ -55,15 +62,11 @@ class Transformation(
             return (zRotationMatrix * (yRotationMatrix * xRotationMatrix)!!) as Matrix4f
         }
 
-        fun getScaleMatrix(x: Float, y: Float, z: Float) : Matrix4f {
+        fun getScaleMatrix(x: Float, y: Float, z: Float): Matrix4f {
             val matrix = Matrix4f.IDENTITY_MATRIX
             for (i in 0 until arrayOf(x, y, z).size)
                 matrix.setValue(arrayOf(x, y, z)[i], i, i)
             return matrix
         }
     }
-}
-
-fun main(){
-    Transformation.getRotationMatrix(5.0f,4.0f,9.0f)?.getArray()?.forEach { it.forEach { println(it) } }
 }

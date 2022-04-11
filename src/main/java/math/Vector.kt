@@ -11,6 +11,8 @@ open class Vector(
 
     constructor(scalars: Array<Float>) : this(scalars[0], scalars[1], scalars[2])
 
+    constructor(value: Float) : this(value, value, value)
+
     fun rotate(theta: Float) {
         x = x * cos(theta) - y * sin(theta)
         y = x * sin(theta) + y * cos(theta)
