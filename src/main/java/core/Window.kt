@@ -1,8 +1,5 @@
 package core
 
-import data.Constants
-import graphics.loaders.MeshLoader
-import graphics.loaders.ShaderLoader
 import input.KeyboardInput
 import org.lwjgl.glfw.Callbacks
 import org.lwjgl.glfw.GLFW
@@ -12,8 +9,14 @@ import org.lwjgl.system.MemoryUtil
 import java.io.PrintStream
 import java.nio.IntBuffer
 
-object Window {
-    var window = 0L
+class Window
+    (
+    private val width: Int,
+    private val height: Int,
+    private val title: String
+) {
+
+    private var window = 0L
 
     private val inputKeyCallback: KeyboardInput = KeyboardInput()
 
@@ -21,23 +24,14 @@ object Window {
         check(GLFW.glfwInit()) { "Unable to initialize" }
     }
 
-    fun createWindow(
-        WIDTH: Int,
-        HEIGHT: Int,
-        TITLE: String
-    ) {
-        window = GLFW.glfwCreateWindow(WIDTH, HEIGHT, TITLE, MemoryUtil.NULL, MemoryUtil.NULL)
+    fun createWindow() {
+        window = GLFW.glfwCreateWindow(500, 500, "title", MemoryUtil.NULL, MemoryUtil.NULL)
         if (window == MemoryUtil.NULL) throw RuntimeException("Failed to create window!")
     }
 
-    fun render() {
-        MeshLoader.load()
-        ShaderLoader.load(
-            Constants.VERTEX_SHADER,
-            Constants.FRAGMENT_SHADER
-        )
+    fun render() =
         GLFW.glfwSwapBuffers(window)
-    }
+
 
     fun update() = GL11.glClear(GL11.GL_COLOR_BUFFER_BIT or GL11.GL_DEPTH_BUFFER_BIT)
 
@@ -68,7 +62,8 @@ object Window {
 
     fun windowShouldClose() = GLFW.glfwWindowShouldClose(window)
 
-    fun makeContextCurrent() = GLFW.glfwMakeContextCurrent(window)
+    fun makeContextCurrent() =
+        GLFW.glfwMakeContextCurrent(window)
 
     fun enableVSync() = GLFW.glfwSwapInterval(1)
 
@@ -84,7 +79,7 @@ object Window {
         GLFW.glfwSetKeyCallback(window) { window: Long, key: Int,
                                           scancode: Int, action: Int,
                                           mods: Int ->
-            Window.inputKeyCallback(
+            inputKeyCallback(
                 window, key, scancode,
                 action, mods
             )
@@ -111,3 +106,5 @@ object Window {
     fun setupErrorCallback(ps: PrintStream): GLFWErrorCallback =
         GLFWErrorCallback.createPrint(ps).set()
 }
+
+
