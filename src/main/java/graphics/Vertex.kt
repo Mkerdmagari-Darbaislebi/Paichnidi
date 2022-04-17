@@ -3,9 +3,9 @@ package graphics
 import math.Vector
 
 open class Vertex(
-    private val scalars: Array<Float>,
+    private val vertices: Array<Float>,
     private val color: Color
-) : Vector(scalars) {
+) : Vector(vertices) {
 
     constructor(
         x: Float,
