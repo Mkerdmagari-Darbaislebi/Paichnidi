@@ -1,5 +1,6 @@
 package graphics
 
+import data.Constants
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL15
@@ -30,7 +31,7 @@ class Mesh(
         get() = _vaoID!!
 
     val vertexCount: Int
-        get() = vertexList.size
+        get() = indexList.size
 
     init {
         storeDataInBuffer()
@@ -73,6 +74,7 @@ class Mesh(
         fun loadToVAO(mesh: Mesh) {
             val vaoID = createVAO()
             mesh._vaoID = vaoID
+            bindIndicesBuffer(mesh.indexBuffer)
             storeDataInAttrList(0, mesh.vertexBuffer)
             unbindVAO()
             mesh.clear()
@@ -90,12 +92,20 @@ class Mesh(
             vbos.add(vboID)
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID)
             GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexBuffer, GL15.GL_STATIC_DRAW)
-            GL20.glVertexAttribPointer(attrNumber, 3, GL11.GL_FLOAT, false, 0, 0)
+            GL20.glVertexAttribPointer(attrNumber, Constants.VERTEX_ARRAY_CARDINALITY, GL11.GL_FLOAT, false, 0, 0)
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0)
         }
 
         private fun unbindVAO() {
             GL30.glBindVertexArray(0)
+        }
+
+        private fun bindIndicesBuffer(indexBuffer: IntBuffer) {
+            val vboID = GL15.glGenBuffers()
+            vbos.add(vboID)
+            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboID)
+            GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL15.GL_STATIC_DRAW)
+//            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0)
         }
 
         fun clean() {
