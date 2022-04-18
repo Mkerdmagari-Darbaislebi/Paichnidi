@@ -78,6 +78,7 @@ abstract class MatrixBuilder(
         return null
     }
 
+
     fun flatten(): List<Float> {
         return array.flatten()
     }

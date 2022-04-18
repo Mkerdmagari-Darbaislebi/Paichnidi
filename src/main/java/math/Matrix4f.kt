@@ -34,6 +34,16 @@ class Matrix4f(
         for (i in 0..3) for (j in 0..3) if (j == columnIndex) array[i][j] = column[i]
     }
 
+
+    operator fun times(matrix: Matrix4f): Matrix4f {
+        val resultArray = Array(4) { Array(4) { 0f } }
+        for (e in 0 until 4)
+            for (i in 0 until 4)
+                for (j in 0 until 4)
+                    resultArray[e][i] += array[e][j] * matrix.array[j][i]
+        return Matrix4f(resultArray)
+    }
+
     // abstract members' implementation
     override fun plusAssign(scalar: Float) {
         this += Matrix4f(scalar)
