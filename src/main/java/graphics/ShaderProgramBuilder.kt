@@ -1,9 +1,15 @@
 package graphics
 
+import math.Matrix4f
+import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20
 import util.FileUtils
+import java.nio.FloatBuffer
 
 object ShaderProgramBuilder {
+
+    private val matrixBuffer: FloatBuffer =
+        BufferUtils.createFloatBuffer(16)
 
     fun createShaderProgram(vertexShaderPath: String, fragmentShaderPath: String): ShaderProgram {
         val vertexShader = loadShader(vertexShaderPath, GL20.GL_VERTEX_SHADER)
@@ -20,35 +26,55 @@ object ShaderProgramBuilder {
         GL20.glLinkProgram(program)
         GL20.glValidateProgram(program)
 
-        return object : ShaderProgram {
+        return object : ShaderProgram(
+            program,
+            vertexShader,
+            fragmentShader
+        ) {
+            private var location_transfomationMatrix = -1
 
-
-            override fun start() =
-                GL20.glUseProgram(program)
-
-            override fun stop() =
-                GL20.glUseProgram(0)
-
-            override fun clean() {
-                stop()
-
-                GL20.glDetachShader(program, vertexShader.id)
-                GL20.glDetachShader(program, fragmentShader.id)
-
-                vertexShader.delete()
-                fragmentShader.delete()
-
-                GL20.glDeleteProgram(program)
+            init {
+                getAllUniformLocations()
             }
 
             override fun bindAttributes() {
                 bindAttribute(0, "position")
             }
 
-            fun bindAttribute(attr: Int, name: String) =
-                GL20.glBindAttribLocation(program, attr, name)
+            override fun getAllUniformLocations() {
+                location_transfomationMatrix =
+                    getUniformLocation("transformationMatrix")
+            }
+
+            override fun loadTransformationMatrix(matrix: Matrix4f) {
+                loadMatrix(location_transfomationMatrix, matrix)
+            }
         }
     }
+
+    private fun loadFloat(location: Int, value: Float) =
+        GL20.glUniform1f(location, value)
+
+    fun loadVertex(location: Int, vertex: Vertex) =
+        GL20.glUniform3f(
+            location,
+            vertex.x,
+            vertex.y,
+            vertex.z
+        )
+
+    fun loadBoolean(location: Int, value: Boolean) =
+        GL20.glUniform1f(
+            location,
+            (if (value) 1f else 0f)
+        )
+
+    fun loadMatrix(location: Int, matrix: Matrix4f) {
+        matrixBuffer.put(matrix.flatten().toFloatArray())
+        matrixBuffer.flip()
+        GL20.glUniformMatrix4fv(location, false, matrixBuffer)
+    }
+
 
     private fun loadShader(path: String, type: Int): Shader =
         createShader(type, FileUtils.readFromFile(path))
@@ -64,12 +90,5 @@ object ShaderProgramBuilder {
         GL20.glAttachShader(program, vsh.id)
         GL20.glAttachShader(program, fsh.id)
 
-    }
-
-    interface ShaderProgram {
-        fun start()
-        fun stop()
-        fun clean()
-        fun bindAttributes()
     }
 }
