@@ -27,9 +27,9 @@ class Transformation(
     fun setScale(vector: Vector) = run { _scale = vector }
 
     fun getTransformationMatrix(): Matrix4f {
-        val translationMatrix = getTranslationMatrix(_translation.x, _translation.y, _translation.z)
-        val rotationMatrix = getRotationMatrix(_rotation.x, _rotation.y, _rotation.z)
-        val scaleMatrix = getScaleMatrix(_scale.x, _scale.y, _scale.z)
+        val translationMatrix = getTranslationMatrix(_translation._x, _translation._y, _translation._z)
+        val rotationMatrix = getRotationMatrix(_rotation._x, _rotation._y, _rotation._z)
+        val scaleMatrix = getScaleMatrix(_scale._x, _scale._y, _scale._z)
 
         return (translationMatrix * (rotationMatrix * scaleMatrix))
     }
