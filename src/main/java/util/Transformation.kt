@@ -31,7 +31,7 @@ class Transformation(
         val rotationMatrix = getRotationMatrix(_rotation.x, _rotation.y, _rotation.z)
         val scaleMatrix = getScaleMatrix(_scale.x, _scale.y, _scale.z)
 
-        return (translationMatrix * (rotationMatrix!! * scaleMatrix)!!) as Matrix4f
+        return (translationMatrix * (rotationMatrix * scaleMatrix))
     }
 
     companion object {
@@ -59,7 +59,7 @@ class Transformation(
             zRotationMatrix.setRow(0, arrayOf(cos(zRadians), -sin(zRadians), 0.0f, 0.0f))
             zRotationMatrix.setRow(1, arrayOf(sin(zRadians), cos(zRadians), 0.0f, 0.0f))
 
-            return (zRotationMatrix * (yRotationMatrix * xRotationMatrix)!!) as Matrix4f
+            return (zRotationMatrix * (yRotationMatrix * xRotationMatrix))
         }
 
         fun getScaleMatrix(x: Float, y: Float, z: Float): Matrix4f {
