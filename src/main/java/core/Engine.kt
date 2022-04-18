@@ -1,5 +1,6 @@
 package core
 
+import Window
 import data.Constants
 import graphics.Color
 import org.lwjgl.Version
@@ -60,7 +61,7 @@ class Engine(
         GL.createCapabilities()
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        window.setKeyCallBack()
+        window.setAllInputCallBacks()
 
         MemoryStack.stackPush().also { stack ->
             val pWidth = stack.mallocInt(1) // int*

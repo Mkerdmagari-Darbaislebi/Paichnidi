@@ -1,6 +1,7 @@
-package core
-
+import input.CursorMovementInput
 import input.KeyboardInput
+import input.MouseButtonInput
+import input.ScrollwheelInput
 import org.lwjgl.glfw.Callbacks
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFWErrorCallback
@@ -19,6 +20,9 @@ class Window
     private var window = 0L
 
     private val inputKeyCallback: KeyboardInput = KeyboardInput()
+    private val cursorMovementInput: CursorMovementInput = CursorMovementInput()
+    private val mouseButtonInput: MouseButtonInput = MouseButtonInput()
+    private val scrollwheelInput: ScrollwheelInput = ScrollwheelInput()
 
     init {
         check(GLFW.glfwInit()) { "Unable to initialize" }
@@ -75,7 +79,14 @@ class Window
         setResizable()
     }
 
-    fun setKeyCallBack() =
+    fun setAllInputCallBacks() {
+        setKeyCallBack()
+        setCursoMovementCallBack()
+        setMouseButtonCallBack()
+        setScrollWheelCallBack()
+    }
+
+    private fun setKeyCallBack() =
         GLFW.glfwSetKeyCallback(window) { window: Long, key: Int,
                                           scancode: Int, action: Int,
                                           mods: Int ->
@@ -83,6 +94,21 @@ class Window
                 window, key, scancode,
                 action, mods
             )
+        }
+
+    private fun setCursoMovementCallBack() =
+        GLFW.glfwSetCursorPosCallback(window) { window: Long, xpos: Double, ypos: Double ->
+            cursorMovementInput(window, xpos, ypos)
+        }
+
+    private fun setMouseButtonCallBack() =
+        GLFW.glfwSetMouseButtonCallback(window) { window: Long, button: Int, action: Int, mods: Int ->
+            mouseButtonInput(window, button, action, mods)
+        }
+
+    private fun setScrollWheelCallBack() =
+        GLFW.glfwSetScrollCallback(window) { window: Long, xpos: Double, ypos: Double ->
+            scrollwheelInput(window, xpos, ypos)
         }
 
     private fun setDefaultWindowHints() = GLFW.glfwDefaultWindowHints()
@@ -106,5 +132,3 @@ class Window
     fun setupErrorCallback(ps: PrintStream): GLFWErrorCallback =
         GLFWErrorCallback.createPrint(ps).set()
 }
-
-
