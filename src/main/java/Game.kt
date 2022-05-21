@@ -1,37 +1,68 @@
 import core.Engine
-import graphics.*
+import graphics.Color
+import graphics.Mesh
+import graphics.Renderer
+import graphics.ShaderProgramBuilder
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import math.Vector
+import util.Transformation
 
 fun main(): Unit = runBlocking {
 
-    val vbList2 = mutableListOf(
-        Vertex(arrayOf(-.5f, .5f, 0f), Color(255, 0, 0, 1f)),
-        Vertex(arrayOf(-.5f, -.5f, 0f), Color(0, 255, 0, 1f)),
-        Vertex(arrayOf(.5f, -.5f, 0f), Color(0, 0, 255, 1f)),
-        Vertex(arrayOf(.5f, .5f, 0f), Color(0, 0, 0, 1f))
+    // Initialize Engine
+    Engine.apply {
+        setWindowWidth(800)
+        setWindowHeight(800)
+        setWindowTitle("Game Engine")
+        setBackgroundColor(Color(100, 100, 120))
+        init()
+    }
+
+    // VertexList
+    val vertices = mutableListOf(
+        Vector(-.4f, .3f, .0f),
+        Vector(-.4f, -.7f, .0f),
+        Vector(.6f, -.7f, .0f),
+        Vector(.6f, .3f, .0f),
     )
 
+    // IndexList
     val indices = intArrayOf(
-        0, 2, 1, 0, 3, 1
+        0, 2, 1,
+        0, 3, 1,
     )
 
-    val renderer = Renderer()
-    val engine = Engine()
-    val mesh = Mesh(vbList2, indices)
-    Mesh.loadToVAO(mesh)
-    val path = "src/main/java/data/shaders"
+    // Create Mesh
+    val mesh = Mesh(vertices, indices)
+
+    // Create ShaderProgram
     val shader = ShaderProgramBuilder.createShaderProgram(
-        "$path/simpleVertexShader.vsh",
-        "$path/simpleFragmentShader.fsh"
+        "simpleVertexShader.vsh",
+        "simpleFragmentShader.fsh"
     )
 
+    var i = 0f
+    // Launch a new Coroutine
     launch {
-        engine.start {
-            shader.start()
-            renderer.render(mesh)
-            shader.stop()
+        // Start CEL
+        Engine.start(shader) {
+            // Transform Mesh
+            shader.loadTransformationMatrix(
+                Transformation(
+                    _scale = Vector(1f),
+                    _translation = Vector(i, 0f,0f)
+                ).getTransformationMatrix()
+            )
+
+            i+=.01f
+
+            // Render Mesh
+            Renderer.render(mesh)
+            Thread.sleep(5)
         }
+
+        // Cleanup
         Mesh.clean()
         shader.clean()
     }

@@ -27,9 +27,9 @@ class Transformation(
     fun setScale(vector: Vector) = run { _scale = vector }
 
     fun getTransformationMatrix(): Matrix4f {
-        val translationMatrix = getTranslationMatrix(_translation._x, _translation._y, _translation._z)
-        val rotationMatrix = getRotationMatrix(_rotation._x, _rotation._y, _rotation._z)
-        val scaleMatrix = getScaleMatrix(_scale._x, _scale._y, _scale._z)
+        val translationMatrix = getTranslationMatrix(_translation.x, _translation.y, _translation.z)
+        val rotationMatrix = getRotationMatrix(_rotation.x, _rotation.y, _rotation.z)
+        val scaleMatrix = getScaleMatrix(_scale.x, _scale.y, _scale.z)
 
         return (translationMatrix * (rotationMatrix * scaleMatrix))
     }
@@ -38,7 +38,8 @@ class Transformation(
 
         fun getTranslationMatrix(x: Float, y: Float, z: Float): Matrix4f {
             val matrix = Matrix4f.IDENTITY_MATRIX
-            matrix.setColumn(3, arrayOf(x, y, z, 1.0f))
+            matrix.setRow(3, arrayOf(x, y, z, 1.0f))
+
             return matrix
         }
 
@@ -49,22 +50,22 @@ class Transformation(
 
             val xRotationMatrix = Matrix4f.IDENTITY_MATRIX
             xRotationMatrix.setRow(1, arrayOf(0.0f, cos(xRadians), -sin(xRadians), 0.0f))
-            xRotationMatrix.setRow(2, arrayOf(0.0f, sin(xRadians), cos(xRadians), 0.0f))
+            xRotationMatrix.setRow(2, arrayOf(0.0f, -sin(xRadians), cos(xRadians), 0.0f))
 
             val yRotationMatrix = Matrix4f.IDENTITY_MATRIX
-            yRotationMatrix.setRow(0, arrayOf(cos(yRadians), -sin(yRadians), 0.0f, 0.0f))
-            yRotationMatrix.setRow(2, arrayOf(sin(yRadians), cos(yRadians), 1.0f, 0.0f))
+            yRotationMatrix.setRow(0, arrayOf(cos(yRadians), 0.0f, -sin(yRadians), 0.0f))
+            yRotationMatrix.setRow(2, arrayOf(sin(yRadians), 1.0f, cos(yRadians), 0.0f))
 
             val zRotationMatrix = Matrix4f.IDENTITY_MATRIX
-            zRotationMatrix.setRow(0, arrayOf(cos(zRadians), -sin(zRadians), 0.0f, 0.0f))
-            zRotationMatrix.setRow(1, arrayOf(sin(zRadians), cos(zRadians), 0.0f, 0.0f))
+            zRotationMatrix.setRow(0, arrayOf(cos(zRadians), sin(zRadians), 0.0f, 0.0f))
+            zRotationMatrix.setRow(1, arrayOf(-sin(zRadians), cos(zRadians), 0.0f, 0.0f))
 
-            return (zRotationMatrix * (yRotationMatrix * xRotationMatrix))
+            return zRotationMatrix * (yRotationMatrix * xRotationMatrix)
         }
 
         fun getScaleMatrix(x: Float, y: Float, z: Float): Matrix4f {
             val matrix = Matrix4f.IDENTITY_MATRIX
-            for (i in 0 until arrayOf(x, y, z).size)
+            for (i in 0 until 3)
                 matrix.setValue(arrayOf(x, y, z)[i], i, i)
             return matrix
         }

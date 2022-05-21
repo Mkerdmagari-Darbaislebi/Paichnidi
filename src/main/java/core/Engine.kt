@@ -1,95 +1,123 @@
 package core
 
-import Window
-import data.Constants
 import graphics.Color
+import graphics.ShaderProgram
 import org.lwjgl.Version
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11
 import org.lwjgl.system.MemoryStack
 import util.Time
 
-class Engine(
-    private var window: Window =
-        Window(
-            Constants.WIDTH,
-            Constants.HEIGHT,
-            Constants.TITLE
-        )
-) {
+object Engine {
 
+    // CEL Controllers
     private var running: Boolean = true
     private var lastUPS: Double = 0.0
     private var lastFPSUPSout: Double = 0.0
-
     private var UPS: Double = 0.0
 
-    private fun setBackgroundColor(color: Color) =
-        GL11.glClearColor(color.red, color.green, color.blue, color.alpha)
+    // Window Attributes
+    private var windowWidth = 500
+    private var windowHeight = 500
+    private var windowTitle = "Game"
+    private var windowBackgroundColor = Color(255, 0, 0)
 
-
-    private fun run(backgroundColor: Color, action: () -> Unit) {
-        println("Hello LWJGL ${Version.getVersion()}!")
-        setBackgroundColor(backgroundColor)
-        lastUPS = Time.currentTime()
-        loop(action)
+    // Window AttributeSetters
+    fun setBackgroundColor(color: Color) {
+        windowBackgroundColor = color
     }
 
-    fun start(action: () -> Unit) {
+    fun setWindowWidth(width: Int) {
+        windowWidth = width
+    }
+
+    fun setWindowHeight(height: Int) {
+        windowHeight = height
+    }
+
+    fun setWindowTitle(title: String) {
+        windowTitle = title
+    }
+
+    // Start CEL
+    fun start(
+        shaderProgram: ShaderProgram,
+        action: () -> Unit
+    ) {
+        // Looping Condition
         running = true
-        run(
-            Color(255, 0, 255, 1f),
-            action
-        )
+
+        // Background Setup
+        windowBackgroundColor.apply {
+            GL11.glClearColor(
+                red, green,
+                blue, alpha
+            )
+        }
+
+        // Time Util Setup
+        lastUPS = Time.currentTime()
+
+        // CEL call
+        coreEngineLoop(shaderProgram) { action() }
     }
 
-    init {
+    // Engine Initializer
+    fun init() {
 
         // Setup an error callback
-        window.setupErrorCallback(System.err)
+        Window.setupErrorCallback(System.err)
 
         // Configure GLFW
-        window.configure()
+        Window.configure()
 
         // Create the window
-        window.createWindow()
+        Window.createWindow(
+            windowWidth,
+            windowHeight,
+            windowTitle
+        )
 
         // Make the OpenGL context current
-        window.makeContextCurrent()
+        Window.makeContextCurrent()
 
         // Set up capabilities
         GL.createCapabilities()
 
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        window.setAllInputCallBacks()
+        // Set up a key callback. It will be called every time a key is pressed, repeated or released.
+        Window.setAllInputCallBacks()
 
         MemoryStack.stackPush().also { stack ->
             val pWidth = stack.mallocInt(1) // int*
             val pHeight = stack.mallocInt(1) // int*
 
             // Get the window size passed to glfwCreateWindow
-            window.getWindowSize(pWidth, pHeight)
+            Window.getWindowSize(pWidth, pHeight)
 
             // Center the window
-            window.centerWindow(pWidth, pHeight)
+            Window.centerWindow(pWidth, pHeight)
         }
 
         // Enable v-sync
-        window.enableVSync()
+        Window.enableVSync()
 
         // Make the window visible
-        window.showWindow()
+        Window.showWindow()
 
     }
 
-    private fun handleExit() = window.apply {
+    private fun handleExit() = Window.apply {
         if (windowShouldClose()) {
             running = false
             stop()
         }
     }
 
-    private fun loop(action: () -> Unit) {
+    // CEL
+    private fun coreEngineLoop(
+        shaderProgram: ShaderProgram,
+        action: () -> Unit
+    ) {
         while (running) {
 
             var passedTime: Double = Time.currentTime() - lastUPS
@@ -104,7 +132,7 @@ class Engine(
 
             // Update passedTime/UPDATE_CAP - times
             while ((passedTime) >= Time.UPDATE_CAP) {
-                window.update()
+                Window.update()
                 renderLock = true
                 UPS++
                 passedTime -= Time.UPDATE_CAP
@@ -113,15 +141,16 @@ class Engine(
             // Capture the moment of the last update and UPS incrementation
             lastUPS = Time.currentTime() - passedTime
 
+            shaderProgram.start()
             action()
+            shaderProgram.stop()
 
             // Render if an update was performed
             if (renderLock)
-                window.render()
+                Window.render()
 
             // Process inputs
-            window.clean()
-
+            Window.clean()
 
             handleExit()
         }
