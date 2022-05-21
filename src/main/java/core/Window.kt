@@ -3,10 +3,8 @@ package core
 import input.CursorMovementInput
 import input.KeyboardInput
 import input.MouseButtonInput
-import input.ScrollwheelInput
-import org.lwjgl.glfw.Callbacks
-import org.lwjgl.glfw.GLFW
-import org.lwjgl.glfw.GLFWErrorCallback
+import input.ScrollWheelInput
+import org.lwjgl.glfw.*
 import org.lwjgl.opengl.GL11
 import org.lwjgl.system.MemoryUtil
 import java.io.PrintStream
@@ -17,10 +15,10 @@ object Window {
     // WindowId to Which OpenGL Associates its Context
     private var windowID = 0L
 
-    private val inputKeyCallback: KeyboardInput = KeyboardInput()
-    private val cursorMovementInput: CursorMovementInput = CursorMovementInput()
-    private val mouseButtonInput: MouseButtonInput = MouseButtonInput()
-    private val scrollwheelInput: ScrollwheelInput = ScrollwheelInput()
+    private val defaultKeyCallback: KeyboardInput = KeyboardInput()
+    private val defaultCursorMovementCallback: CursorMovementInput = CursorMovementInput()
+    private val defaultMouseButtonCallback: MouseButtonInput = MouseButtonInput()
+    private val defaultScrollWheelCallback: ScrollWheelInput = ScrollWheelInput()
 
     // Library Init Checker
     init {
@@ -83,36 +81,61 @@ object Window {
         setResizable()
     }
 
-    fun setAllInputCallBacks() {
-        setKeyCallBack()
-        setCursoMovementCallBack()
-        setMouseButtonCallBack()
-        setScrollWheelCallBack()
+    fun setAllInputCallBacks(
+        keyboardInputListener: GLFWKeyCallback?,
+        cursorMovementInputListener: GLFWCursorPosCallback?,
+        mouseButtonInputListener: GLFWMouseButtonCallback?,
+        scrollWheelInputListener: GLFWScrollCallback?
+    ) {
+        setKeyCallback(keyboardInputListener)
+        setCursorMovementCallback(cursorMovementInputListener)
+        setMouseButtonCallback(mouseButtonInputListener)
+        setScrollWheelCallback(scrollWheelInputListener)
     }
 
-    private fun setKeyCallBack() =
+    private fun setKeyCallback(keyboardInputListener: GLFWKeyCallback?) {
         GLFW.glfwSetKeyCallback(windowID) { window: Long, key: Int,
                                             scancode: Int, action: Int,
                                             mods: Int ->
-            inputKeyCallback(
+            defaultKeyCallback(
                 window, key, scancode,
                 action, mods
             )
-        }
 
-    private fun setCursoMovementCallBack() =
+            keyboardInputListener?.let {
+                it(
+                    window, key, scancode,
+                    action, mods
+                )
+            }
+        }
+    }
+
+    private fun setCursorMovementCallback(cursorMovementInputListener: GLFWCursorPosCallback?) =
         GLFW.glfwSetCursorPosCallback(windowID) { window: Long, xpos: Double, ypos: Double ->
-            cursorMovementInput(window, xpos, ypos)
+            defaultCursorMovementCallback(window, xpos, ypos)
+
+            cursorMovementInputListener?.let {
+                it(window, xpos, ypos)
+            }
         }
 
-    private fun setMouseButtonCallBack() =
+    private fun setMouseButtonCallback(mouseButtonInputListener: GLFWMouseButtonCallback?) =
         GLFW.glfwSetMouseButtonCallback(windowID) { window: Long, button: Int, action: Int, mods: Int ->
-            mouseButtonInput(window, button, action, mods)
+            defaultMouseButtonCallback(window, button, action, mods)
+
+            mouseButtonInputListener?.let {
+                it(window, button, action, mods)
+            }
         }
 
-    private fun setScrollWheelCallBack() =
+    private fun setScrollWheelCallback(scrollWheelInputListener: GLFWScrollCallback?) =
         GLFW.glfwSetScrollCallback(windowID) { window: Long, xpos: Double, ypos: Double ->
-            scrollwheelInput(window, xpos, ypos)
+            defaultScrollWheelCallback(window, xpos, ypos)
+
+            scrollWheelInputListener?.let {
+                it(window, xpos, ypos)
+            }
         }
 
     private fun setDefaultWindowHints() = GLFW.glfwDefaultWindowHints()

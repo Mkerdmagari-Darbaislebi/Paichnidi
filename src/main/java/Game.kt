@@ -7,14 +7,16 @@ import  graphics.loaders.ObjMeshLoader
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import math.Vector
+import org.lwjgl.glfw.GLFW
 import util.Transformation
+import kotlin.random.Random
 
 fun main(): Unit = runBlocking {
 
     // Initialize Engine
     Engine.apply {
-        setWindowWidth(800)
-        setWindowHeight(800)
+        setWindowWidth(1920)
+        setWindowHeight(1080)
         setWindowTitle("Game Engine")
         setBackgroundColor(Color(100, 100, 120))
         init()
@@ -29,7 +31,28 @@ fun main(): Unit = runBlocking {
         "simpleFragmentShader.fsh"
     )
 
-    var i = 0f
+    var horizontal = 0f
+    var rot = 0f
+    var scale = 0.5f
+    val scales = arrayOf(
+        .3f, .5f, .7f, 1f, 1.3f
+    )
+
+    // Add CustomKeyListener
+    Engine.apply {
+        setKeyboardInputListener { _, key, _, action, _ ->
+            if (action != GLFW.GLFW_RELEASE)
+                when (key) {
+                    GLFW.GLFW_KEY_LEFT -> horizontal -= .1f
+                    GLFW.GLFW_KEY_RIGHT -> horizontal += .1f
+                    GLFW.GLFW_KEY_UP -> rot++
+                    GLFW.GLFW_KEY_DOWN -> rot--
+                    GLFW.GLFW_KEY_SPACE -> scale = scales.random()
+                }
+        }
+        resetInputListeners()
+    }
+
     // Launch a new Coroutine
     launch {
         // Start CEL
@@ -37,12 +60,12 @@ fun main(): Unit = runBlocking {
             // Transform Mesh
             shader.loadTransformationMatrix(
                 Transformation(
-                    _scale = Vector(0.5f),
-                    _rotation = Vector(i, 0f,i)
+                    _scale = Vector(scale),
+                    _translation = Vector(horizontal, 0f, 0f),
+                    _rotation = Vector(0f, 0f, rot)
                 ).getTransformationMatrix()
             )
-
-            i+=1f
+//            i += .1f
 
             // Render Mesh
             Renderer.render(mesh)
