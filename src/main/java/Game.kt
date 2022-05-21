@@ -3,6 +3,7 @@ import graphics.Color
 import graphics.Mesh
 import graphics.Renderer
 import graphics.ShaderProgramBuilder
+import  graphics.MeshLoader
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import math.Vector
@@ -34,7 +35,7 @@ fun main(): Unit = runBlocking {
     )
 
     // Create Mesh
-    val mesh = Mesh(vertices, indices)
+    val mesh = MeshLoader.OBJToMesh("C:\\Users\\student\\Desktop\\IntellijIDEA\\igrushka\\Paichnidi\\src\\main\\java\\data\\shaders\\models\\KacebisKaci.obj")
 
     // Create ShaderProgram
     val shader = ShaderProgramBuilder.createShaderProgram(
@@ -50,12 +51,12 @@ fun main(): Unit = runBlocking {
             // Transform Mesh
             shader.loadTransformationMatrix(
                 Transformation(
-                    _scale = Vector(1f),
-                    _translation = Vector(i, 0f,0f)
+                    _scale = Vector(0.5f),
+                    _rotation = Vector(i, 0f,i)
                 ).getTransformationMatrix()
             )
 
-            i+=.01f
+            i+=1f
 
             // Render Mesh
             Renderer.render(mesh)
