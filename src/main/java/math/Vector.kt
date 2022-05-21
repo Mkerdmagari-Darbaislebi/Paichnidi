@@ -58,4 +58,5 @@ class Vector(
             z - vector.z
         )
 
+    val flatten = arrayOf(x, y, z)
 }

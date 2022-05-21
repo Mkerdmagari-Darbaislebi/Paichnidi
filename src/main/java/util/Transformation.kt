@@ -38,7 +38,7 @@ class Transformation(
 
         fun getTranslationMatrix(x: Float, y: Float, z: Float): Matrix4f {
             val matrix = Matrix4f.IDENTITY_MATRIX
-            matrix.setRow(3, arrayOf(x, y, z, 1.0f))
+            matrix.setRow(3, floatArrayOf(x, y, z, 1.0f))
 
             return matrix
         }
@@ -49,16 +49,16 @@ class Transformation(
             val zRadians = Math.toRadians(z.toDouble()).toFloat()
 
             val xRotationMatrix = Matrix4f.IDENTITY_MATRIX
-            xRotationMatrix.setRow(1, arrayOf(0.0f, cos(xRadians), -sin(xRadians), 0.0f))
-            xRotationMatrix.setRow(2, arrayOf(0.0f, -sin(xRadians), cos(xRadians), 0.0f))
+            xRotationMatrix.setRow(1, floatArrayOf(0.0f, cos(xRadians), -sin(xRadians), 0.0f))
+            xRotationMatrix.setRow(2, floatArrayOf(0.0f, -sin(xRadians), cos(xRadians), 0.0f))
 
             val yRotationMatrix = Matrix4f.IDENTITY_MATRIX
-            yRotationMatrix.setRow(0, arrayOf(cos(yRadians), 0.0f, -sin(yRadians), 0.0f))
-            yRotationMatrix.setRow(2, arrayOf(sin(yRadians), 1.0f, cos(yRadians), 0.0f))
+            yRotationMatrix.setRow(0, floatArrayOf(cos(yRadians), 0.0f, -sin(yRadians), 0.0f))
+            yRotationMatrix.setRow(2, floatArrayOf(sin(yRadians), 1.0f, cos(yRadians), 0.0f))
 
             val zRotationMatrix = Matrix4f.IDENTITY_MATRIX
-            zRotationMatrix.setRow(0, arrayOf(cos(zRadians), sin(zRadians), 0.0f, 0.0f))
-            zRotationMatrix.setRow(1, arrayOf(-sin(zRadians), cos(zRadians), 0.0f, 0.0f))
+            zRotationMatrix.setRow(0, floatArrayOf(cos(zRadians), sin(zRadians), 0.0f, 0.0f))
+            zRotationMatrix.setRow(1, floatArrayOf(-sin(zRadians), cos(zRadians), 0.0f, 0.0f))
 
             return zRotationMatrix * (yRotationMatrix * xRotationMatrix)
         }

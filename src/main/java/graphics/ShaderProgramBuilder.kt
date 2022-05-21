@@ -71,7 +71,7 @@ object ShaderProgramBuilder {
         )
 
     fun loadMatrix(location: Int, matrix: Matrix4f) {
-        matrixBuffer.put(matrix.flatten().toFloatArray())
+        matrixBuffer.put(matrix.flatten)
         matrixBuffer.flip()
         GL20.glUniformMatrix4fv(location, false, matrixBuffer)
     }
