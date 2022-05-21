@@ -5,6 +5,10 @@ class Matrix4f(
         Array(4) { FloatArray(4) { .0f } }
 ) : LinAlgObj {
 
+    val flatten
+        get() = arr.map { it.toList() }.toList().flatten().toFloatArray()
+
+
     private val areInBounds: (Int, Int) -> Boolean = { a, b ->
         a in 0..4 && b in 0..4
     }

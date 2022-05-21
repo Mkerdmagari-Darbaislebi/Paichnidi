@@ -3,7 +3,7 @@ import graphics.Color
 import graphics.Mesh
 import graphics.Renderer
 import graphics.ShaderProgramBuilder
-import  graphics.MeshLoader
+import  graphics.loaders.ObjMeshLoader
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import math.Vector
@@ -20,22 +20,8 @@ fun main(): Unit = runBlocking {
         init()
     }
 
-    // VertexList
-    val vertices = mutableListOf(
-        Vector(-.4f, .3f, .0f),
-        Vector(-.4f, -.7f, .0f),
-        Vector(.6f, -.7f, .0f),
-        Vector(.6f, .3f, .0f),
-    )
-
-    // IndexList
-    val indices = intArrayOf(
-        0, 2, 1,
-        0, 3, 1,
-    )
-
     // Create Mesh
-    val mesh = MeshLoader.OBJToMesh("C:\\Users\\student\\Desktop\\IntellijIDEA\\igrushka\\Paichnidi\\src\\main\\java\\data\\shaders\\models\\KacebisKaci.obj")
+    val mesh = ObjMeshLoader.load("cube.obj")
 
     // Create ShaderProgram
     val shader = ShaderProgramBuilder.createShaderProgram(

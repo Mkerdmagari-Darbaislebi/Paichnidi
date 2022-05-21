@@ -36,7 +36,7 @@ class Mesh(
         get() = indexList.size
 
     private fun storeDataInBuffer() {
-        val vertices = vertexList.map { it.flatten() }.flatten().toFloatArray()
+        val vertices = vertexList.map { it.flatten.toList() }.flatten().toFloatArray()
         val indices = indexList
 
         _vertexBuffer = BufferUtils.createFloatBuffer(vertices.size)

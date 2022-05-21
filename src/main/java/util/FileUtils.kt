@@ -5,7 +5,7 @@ import java.io.FileReader
 
 object FileUtils {
 
-    private const val BASE_PATH = "src/main/java/data/shaders/"
+    private const val BASE_PATH = "src/main/resources/shaders/"
 
     fun readFromFile(path: String): String {
         val result = java.lang.StringBuilder()
