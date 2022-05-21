@@ -72,6 +72,6 @@ class Matrix4f(
 
         @JvmStatic
         val IDENTITY_MATRIX: Matrix4f
-            get() = Matrix4f(_IDENTITY_ARRAY)
+            get() = Matrix4f(_IDENTITY_ARRAY.clone())
     }
 }

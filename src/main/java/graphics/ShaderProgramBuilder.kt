@@ -1,6 +1,7 @@
 package graphics
 
 import math.Matrix4f
+import math.Vector
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20
 import util.FileUtils
@@ -55,12 +56,12 @@ object ShaderProgramBuilder {
     private fun loadFloat(location: Int, value: Float) =
         GL20.glUniform1f(location, value)
 
-    fun loadVertex(location: Int, vertex: Vertex) =
+    fun loadVertex(location: Int, vector: Vector) =
         GL20.glUniform3f(
             location,
-            vertex.x,
-            vertex.y,
-            vertex.z
+            vector.x,
+            vector.y,
+            vector.z
         )
 
     fun loadBoolean(location: Int, value: Boolean) =

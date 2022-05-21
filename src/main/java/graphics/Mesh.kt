@@ -1,6 +1,6 @@
 package graphics
 
-import data.Constants
+import math.Vector
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL15
@@ -10,13 +10,18 @@ import java.nio.FloatBuffer
 import java.nio.IntBuffer
 
 class Mesh(
-    private val vertexList: MutableList<Vertex>,
+    private val vertexList: MutableList<Vector>,
     private val indexList: IntArray
 ) {
+
+    init {
+        storeDataInBuffer()
+        loadToVAO(this)
+    }
+
     private var _vaoID: Int? = null
     private lateinit var _vertexBuffer: FloatBuffer
     private lateinit var _indexBuffer: IntBuffer
-    private lateinit var _colorBuffer: FloatBuffer
 
     val vertexBuffer: FloatBuffer
         get() = _vertexBuffer
@@ -24,31 +29,21 @@ class Mesh(
     val indexBuffer: IntBuffer
         get() = _indexBuffer
 
-    val colorBuffer: FloatBuffer
-        get() = _colorBuffer
-
     val vaoID: Int
         get() = _vaoID!!
 
     val vertexCount: Int
         get() = indexList.size
 
-    init {
-        storeDataInBuffer()
-    }
-
     private fun storeDataInBuffer() {
         val vertices = vertexList.map { it.flatten() }.flatten().toFloatArray()
         val indices = indexList
-        val colors = vertexList.map { it.flattenColor() }.flatten().toFloatArray()
 
         _vertexBuffer = BufferUtils.createFloatBuffer(vertices.size)
         _indexBuffer = BufferUtils.createIntBuffer(indices.size)
-        _colorBuffer = BufferUtils.createFloatBuffer(colors.size)
 
         _vertexBuffer.put(vertices)
         _indexBuffer.put(indices)
-        _colorBuffer.put(colors)
 
         flip()
     }
@@ -57,21 +52,21 @@ class Mesh(
     private fun flip() {
         _vertexBuffer.flip()
         _indexBuffer.flip()
-        _colorBuffer.flip()
     }
 
     fun clear() {
         _vertexBuffer.clear()
         _indexBuffer.clear()
-        _colorBuffer.clear()
     }
 
     companion object {
 
+        private const val VERTEX_ARRAY_CARDINALITY = 3
+
         private val vaos = mutableListOf<Int>()
         private val vbos = mutableListOf<Int>()
 
-        fun loadToVAO(mesh: Mesh) {
+        private fun loadToVAO(mesh: Mesh) {
             val vaoID = createVAO()
             mesh._vaoID = vaoID
             bindIndicesBuffer(mesh.indexBuffer)
@@ -92,7 +87,7 @@ class Mesh(
             vbos.add(vboID)
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID)
             GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexBuffer, GL15.GL_STATIC_DRAW)
-            GL20.glVertexAttribPointer(attrNumber, Constants.VERTEX_ARRAY_CARDINALITY, GL11.GL_FLOAT, false, 0, 0)
+            GL20.glVertexAttribPointer(attrNumber, VERTEX_ARRAY_CARDINALITY, GL11.GL_FLOAT, false, 0, 0)
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0)
         }
 
