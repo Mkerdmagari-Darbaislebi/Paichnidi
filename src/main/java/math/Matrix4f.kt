@@ -9,7 +9,7 @@ class Matrix4f(
         get() = arr.map { it.toList() }.toList().flatten().toFloatArray()
 
 
-    private val areInBounds: (Int, Int) -> Boolean = { a, b ->
+    val areInBounds: (Int, Int) -> Boolean = { a, b ->
         a in 0..4 && b in 0..4
     }
 
