@@ -160,4 +160,16 @@ class Matrix4fTest {
         for (i in 0..3) for (j in 0..3)
             Assertions.assertEquals(nf[i][j], returnObj.getValue(i,j))
     }
+
+    @Test
+    fun test_dot() {
+        val testObj = Matrix4f()
+        val nf = Array(4) { FloatArray(4) }
+        for (i in 0 until 4) for (j in 0 until 4) nf[i][j] = (i+j).toFloat()
+        testObj.setArray(nf)
+        val k = Array(4) { FloatArray(4) }
+        for (i in 0..3) for (j in 0..3) k[i][j] = 1f
+        val returnObj = testObj.dot(Matrix4f(k))
+        Assertions.assertEquals(48.0f, returnObj)
+    }
 }
