@@ -34,9 +34,9 @@ class QuanternionTest {
         val test_quanternion2 = Quanternion(4.1f, 8.4f, 6.5f, 9.3f)
         val obtained_quanternion = test_quanternion1.times(test_quanternion2)
         val expected_x = 1.4f * 4.1f - 4.8f * 8.4f - 5.6f * 6.5f - 3.9f * 9.3f
-        val expected_y = 1.4f * 4.1f + 4.8f * 8.4f + 5.6f * 6.5f - 3.9f * 9.3f
-        val expected_z = 1.4f * 4.1f - 4.8f * 8.4f + 5.6f * 6.5f + 3.9f * 9.3f
-        val expected_w = 1.4f * 4.1f + 4.8f * 8.4f - 5.6f * 6.5f + 3.9f * 9.3f
+        val expected_y = 1.4f * 8.4f + 4.8f * 4.1f + 5.6f * 9.3f - 3.9f * 6.5f
+        val expected_z = 1.4f * 6.5f - 4.8f * 9.3f + 5.6f * 1.4f + 3.9f * 8.4f
+        val expected_w = 1.4f * 9.3f + 4.8f * 6.5f - 5.6f * 8.4f + 3.9f * 4.1f
         Assertions.assertEquals(expected_x, obtained_quanternion.getX)
         Assertions.assertEquals(expected_y, obtained_quanternion.getY)
         Assertions.assertEquals(expected_z, obtained_quanternion.getZ)
