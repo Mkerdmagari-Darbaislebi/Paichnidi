@@ -1,9 +1,9 @@
-package core
+package unit
 
 import graphics.Mesh
 import math.Matrix4f
 import math.Vector
-import util.Transformation
+import util.Transformations
 
 class Component(
     val mesh: Mesh,
@@ -18,5 +18,5 @@ class Component(
     val setScale: (Float) -> Unit = { scale = it }
 
     val transformation: Matrix4f
-        get() = Transformation(position, rotation, Vector(scale)).getTransformationMatrix()
+        get() = Transformations.transformationMatrix(position, rotation, Vector(scale))
 }

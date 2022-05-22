@@ -1,4 +1,4 @@
-import core.Component
+import unit.Component
 import core.Engine
 import graphics.Color
 import graphics.Mesh
@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import math.Vector
 import org.lwjgl.glfw.GLFW
+import unit.Camera
 
 fun main(): Unit = runBlocking {
 
@@ -30,35 +31,37 @@ fun main(): Unit = runBlocking {
         "simpleFragmentShader.fsh"
     )
 
-    val scales = arrayOf(
-        .3f, .5f, .7f, 1f, 1.3f
-    )
-
+    // Create Component
     val component = Component(mesh, Vector(0f, 0f, 0f), Vector(0f, 0f, 0f), 0.7f)
 
-    // Add CustomKeyListener
+    // Add ComponentKeyListener
     Engine.apply {
         setKeyboardInputListener { _, key, _, action, _ ->
             if (action != GLFW.GLFW_RELEASE)
                 when (key) {
-                    GLFW.GLFW_KEY_LEFT -> component.move(-0.1f, 0f, 0f)
+                    GLFW.GLFW_KEY_LEFT -> component.move(0f, 0f, -0.1f)
                     GLFW.GLFW_KEY_RIGHT -> component.move(-0.1f, 0f, 0f)
-                    GLFW.GLFW_KEY_UP -> component.rotate(0f, 0.1f, 0f)
-                    GLFW.GLFW_KEY_DOWN -> component.rotate(0f, -0.1f, 0f)
-                    GLFW.GLFW_KEY_SPACE -> component.setScale(scales.random())
+                    GLFW.GLFW_KEY_UP -> component.rotate(0f, 0.4f, 0f)
+                    GLFW.GLFW_KEY_DOWN -> component.rotate(0f, -.4f, 0f)
+                    GLFW.GLFW_KEY_SPACE -> component.setScale(listOf(.3f, .5f, .7f, 1f).random())
                 }
         }
         resetInputListeners()
     }
 
+    // Create Camera
+    val camera = Camera()
+    // Set DefaultCameraKeyboardInputListener
+    camera.setCameraKeyboardInputListener()
+
+    // Init And Load Projection Matrix
+    Renderer.initProjectionMatrix(shaderProgram)
 
     // Launch a new Coroutine
     launch {
         // Start CEL
         Engine.start(shaderProgram) {
-            // Transform Mesh
-//            i += .1f
-
+            shaderProgram.loadViewMatrix(camera)
             // Render Mesh
             Renderer.render(component, shaderProgram)
             Thread.sleep(5)

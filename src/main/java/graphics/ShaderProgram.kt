@@ -2,6 +2,7 @@ package graphics
 
 import math.Matrix4f
 import org.lwjgl.opengl.GL20
+import unit.Camera
 
 abstract class ShaderProgram(
     private val program: Int,
@@ -38,4 +39,6 @@ abstract class ShaderProgram(
         GL20.glGetUniformLocation(program, name)
 
     abstract fun loadTransformationMatrix(matrix: Matrix4f)
+    abstract fun loadProjectionMatrix(matrix: Matrix4f)
+    abstract fun loadViewMatrix(camera: Camera)
 }

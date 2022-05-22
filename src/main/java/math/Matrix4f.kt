@@ -39,6 +39,9 @@ class Matrix4f(
     }
 
     // Matrix Operations
+    operator fun get(index: Int): FloatArray =
+        arr[index]
+
     operator fun times(matrix: Matrix4f): Matrix4f {
         val resultArray = Array(4) { FloatArray(4) { 0f } }
         for (e in 0 until 4)

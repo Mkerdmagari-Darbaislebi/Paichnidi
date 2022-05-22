@@ -4,7 +4,9 @@ import math.Matrix4f
 import math.Vector
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20
+import unit.Camera
 import util.FileUtils
+import util.Transformations
 import java.nio.FloatBuffer
 
 object ShaderProgramBuilder {
@@ -32,7 +34,9 @@ object ShaderProgramBuilder {
             vertexShader,
             fragmentShader
         ) {
-            private var location_transfomationMatrix = -1
+            private var locationTransformationMatrix = -1
+            private var locationProjectionMatrix = -1
+            private var locationViewMatrix = -1
 
             init {
                 getAllUniformLocations()
@@ -43,13 +47,24 @@ object ShaderProgramBuilder {
             }
 
             override fun getAllUniformLocations() {
-                location_transfomationMatrix =
+                locationTransformationMatrix =
                     getUniformLocation("transformationMatrix")
+                locationProjectionMatrix =
+                    getUniformLocation("projectionMatrix")
+                locationViewMatrix =
+                    getUniformLocation("viewMatrix")
             }
 
-            override fun loadTransformationMatrix(matrix: Matrix4f) {
-                loadMatrix(location_transfomationMatrix, matrix)
-            }
+            override fun loadTransformationMatrix(matrix: Matrix4f) =
+                loadMatrix(locationTransformationMatrix, matrix)
+
+
+            override fun loadProjectionMatrix(matrix: Matrix4f) =
+                loadMatrix(locationProjectionMatrix, matrix)
+
+            override fun loadViewMatrix(camera: Camera) =
+                loadMatrix(locationViewMatrix, Transformations.cameraViewMatrix(camera))
+
         }
     }
 
