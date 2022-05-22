@@ -21,10 +21,10 @@ class Vector(
     }
 
     override fun plus(scalar: Float) =
-        this + Vector(1f)
+        this + Vector(scalar)
 
     override fun minus(scalar: Float) =
-        this - Vector(1f)
+        this - Vector(scalar)
 
     override fun inc() =
         this + 1f
