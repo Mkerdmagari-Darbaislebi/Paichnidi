@@ -45,6 +45,14 @@ class Quanternion(
         )
     }
 
+    //getters
+
+    val getX get() = x;
+    val getY get() = y;
+    val getZ get() = z;
+    val getW get() = w;
+
+
     companion object {
 
         private val _IDENTITY_QUANTERNION
