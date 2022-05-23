@@ -12,6 +12,7 @@ object ObjMeshLoader : MeshLoader {
 
     override fun load(path: String): Mesh {
         val vertices: MutableList<Vector> = mutableListOf()
+        val textures: MutableList<Vector> = mutableListOf()
         val indices: MutableList<Int> = mutableListOf()
 
         try {
@@ -20,7 +21,12 @@ object ObjMeshLoader : MeshLoader {
                 if (it.startsWith("v ")) {
                     val lineData = it.split(" ")
                     val data = lineData.slice(1 until lineData.size).map { a -> a.toFloat() }
-                    vertices.add(Vector(arrayOf(data[0], data[1], data[2])))
+                    vertices.add(Vector(data[0], data[1], data[2]))
+                }
+                if (it.startsWith("vt ")){
+                    val lineData = it.split(" ")
+                    val data = lineData.slice(1 until lineData.size).map { a -> a.toFloat() }
+                    textures.add(Vector(data[0],data[1]))
                 }
                 if (it.startsWith("f ")) {
                     val data = it.split(" ")
@@ -35,7 +41,7 @@ object ObjMeshLoader : MeshLoader {
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
         }
-        return Mesh(vertices, indices.toIntArray())
+        return Mesh(vertices, textures, indices.toIntArray())
     }
 
 }

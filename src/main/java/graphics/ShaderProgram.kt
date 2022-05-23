@@ -41,4 +41,6 @@ abstract class ShaderProgram(
     abstract fun loadTransformationMatrix(matrix: Matrix4f)
     abstract fun loadProjectionMatrix(matrix: Matrix4f)
     abstract fun loadViewMatrix(camera: Camera)
+
+    abstract fun loadTextureSampler(value: Int)
 }
