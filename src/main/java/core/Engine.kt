@@ -8,6 +8,8 @@ import org.lwjgl.glfw.GLFWMouseButtonCallback
 import org.lwjgl.glfw.GLFWScrollCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL11.GL_DEPTH_TEST
+import org.lwjgl.opengl.GL11.glEnable
 import org.lwjgl.system.MemoryStack
 import util.CursorAndScrollWheelInputListener
 import util.KeyboardInputListener
@@ -112,6 +114,7 @@ object Engine {
                 red, green,
                 blue, alpha
             )
+            glEnable(GL_DEPTH_TEST)
         }
 
         // Time Util Setup

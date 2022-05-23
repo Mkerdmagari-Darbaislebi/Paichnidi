@@ -30,7 +30,7 @@ object Renderer {
         GL20.glEnableVertexAttribArray(1)
         shaderProgram.loadTransformationMatrix(component.transformation)
         GL11.glDrawElements(
-            GL11.GL_TRIANGLES,
+            GL11.GL_POLYGON,
             mesh.vertexCount,
             GL11.GL_UNSIGNED_INT,
             0
