@@ -45,11 +45,11 @@ fun main(): Unit = runBlocking {
     )
 
     // Create Component
-    val component = Component(mesh, Vector(0f, 0f, -10f), Vector(0f, 0f, 0f), 1f)
+    val component = Component(mesh, Vector(0f, 0f, -10f), Vector(0f, 0f, 66f), 1f)
 
     // Add ComponentKeyListener
     val movement = .5f
-    val rotation = .3f
+    val rotation = 6f
     Engine.apply {
         setKeyboardInputListener { _, key, _, action, _ ->
             if (action != GLFW.GLFW_RELEASE)

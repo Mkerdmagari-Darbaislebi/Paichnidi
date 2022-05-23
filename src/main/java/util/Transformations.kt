@@ -13,7 +13,7 @@ object Transformations {
         val rotationMatrix = rotationMatrix(b)
         val scaleMatrix = scaleMatrix(c)
 
-        (scaleMatrix * (rotationMatrix * translationMatrix))
+        (rotationMatrix * (scaleMatrix * translationMatrix))
     }
 
     val cameraViewMatrix: (Camera) -> Matrix4f = { camera ->
