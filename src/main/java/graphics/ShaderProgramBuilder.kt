@@ -4,7 +4,9 @@ import math.Matrix4f
 import math.Vector
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL20
+import unit.Camera
 import util.FileUtils
+import util.Transformations
 import java.nio.FloatBuffer
 
 object ShaderProgramBuilder {
@@ -32,7 +34,10 @@ object ShaderProgramBuilder {
             vertexShader,
             fragmentShader
         ) {
-            private var location_transfomationMatrix = -1
+            private var locationTransformationMatrix = -1
+            private var locationProjectionMatrix = -1
+            private var locationViewMatrix = -1
+            private var locationTextureSampler = -1
 
             init {
                 getAllUniformLocations()
@@ -40,15 +45,32 @@ object ShaderProgramBuilder {
 
             override fun bindAttributes() {
                 bindAttribute(0, "position")
+                bindAttribute(1, "textureCoord")
             }
 
             override fun getAllUniformLocations() {
-                location_transfomationMatrix =
+                locationTransformationMatrix =
                     getUniformLocation("transformationMatrix")
+                locationProjectionMatrix =
+                    getUniformLocation("projectionMatrix")
+                locationViewMatrix =
+                    getUniformLocation("viewMatrix")
+                locationTextureSampler =
+                    getUniformLocation("textureSampler")
             }
 
-            override fun loadTransformationMatrix(matrix: Matrix4f) {
-                loadMatrix(location_transfomationMatrix, matrix)
+            override fun loadTransformationMatrix(matrix: Matrix4f) =
+                loadMatrix(locationTransformationMatrix, matrix)
+
+
+            override fun loadProjectionMatrix(matrix: Matrix4f) =
+                loadMatrix(locationProjectionMatrix, matrix)
+
+            override fun loadViewMatrix(camera: Camera) {}
+//                loadMatrix(locationViewMatrix, Transformations.cameraViewMatrix(camera))
+
+            override fun loadTextureSampler(value: Int) {
+                loadInt(locationTextureSampler, 1)
             }
         }
     }
@@ -69,6 +91,10 @@ object ShaderProgramBuilder {
             location,
             (if (value) 1f else 0f)
         )
+
+    fun loadInt(location: Int, value: Int){
+        GL20.glUniform1i(location , value)
+    }
 
     fun loadMatrix(location: Int, matrix: Matrix4f) {
         matrixBuffer.put(matrix.flatten)

@@ -8,12 +8,14 @@ import org.lwjgl.glfw.GLFWMouseButtonCallback
 import org.lwjgl.glfw.GLFWScrollCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL11.GL_DEPTH_TEST
+import org.lwjgl.opengl.GL11.glEnable
 import org.lwjgl.system.MemoryStack
+import util.CursorAndScrollWheelInputListener
+import util.KeyboardInputListener
+import util.MouseInputListener
 import util.Time
 
-private typealias KeyboardInputListener = (Long, Int, Int, Int, Int) -> Unit
-private typealias CursorAndScrollWheelInputListener = (Long, Double, Double) -> Unit
-private typealias MouseInputListener = (Long, Int, Int, Int) -> Unit
 
 object Engine {
 
@@ -24,75 +26,78 @@ object Engine {
     private var UPS: Double = 0.0
 
     // Window Attributes
-    private var windowWidth = 500
-    private var windowHeight = 500
-    private var windowTitle = "Game"
-    private var windowBackgroundColor = Color(255, 0, 0)
+    private var _windowWidth = 500
+    private var _windowHeight = 500
+    private var _windowTitle = "Game"
+    private var _windowBackgroundColor = Color(255, 0, 0)
+
+    val windowWidth get() = _windowWidth
+    val windowHeight get() = _windowHeight
+    val windowTitle get() = _windowTitle
+    val windowBackgroundColor get() = _windowBackgroundColor
 
     // Window AttributeSetters
     fun setBackgroundColor(color: Color) {
-        windowBackgroundColor = color
+        _windowBackgroundColor = color
     }
 
     fun setWindowWidth(width: Int) {
-        windowWidth = width
+        _windowWidth = width
     }
 
     fun setWindowHeight(height: Int) {
-        windowHeight = height
+        _windowHeight = height
     }
 
     fun setWindowTitle(title: String) {
-        windowTitle = title
+        _windowTitle = title
     }
 
 
     // InputListeners
-    private var keyboardInputListener: GLFWKeyCallback? = null
-    private var cursorMovementInputListener: GLFWCursorPosCallback? = null
-    private var mouseButtonInputListener: GLFWMouseButtonCallback? = null
-    private var scrollWheelInputListener: GLFWScrollCallback? = null
+    private var keyboardInputListeners: MutableList<GLFWKeyCallback> = mutableListOf()
+    private var cursorMovementInputListeners: MutableList<GLFWCursorPosCallback> = mutableListOf()
+    private var mouseButtonInputListeners: MutableList<GLFWMouseButtonCallback> = mutableListOf()
+    private var scrollWheelInputListeners: MutableList<GLFWScrollCallback> = mutableListOf()
 
     // InputListenerSetters
-    fun setKeyboardInputListener(keyListenerFunction: KeyboardInputListener) {
-        keyboardInputListener = object : GLFWKeyCallback() {
+    fun setKeyboardInputListener(keyListenerFunction: KeyboardInputListener) =
+        keyboardInputListeners.add(object : GLFWKeyCallback() {
             override operator fun invoke(window: Long, key: Int, scancode: Int, action: Int, mods: Int) =
                 keyListenerFunction(window, key, scancode, action, mods)
 
-        }
-
-    }
+        })
 
 
-    fun setCursorMovementInputListener(cursorListenerFunction: CursorAndScrollWheelInputListener) {
-        cursorMovementInputListener = object : GLFWCursorPosCallback() {
+    fun setCursorMovementInputListener(cursorListenerFunction: CursorAndScrollWheelInputListener) =
+        cursorMovementInputListeners.add(object : GLFWCursorPosCallback() {
             override operator fun invoke(window: Long, xpos: Double, ypos: Double) =
                 cursorListenerFunction(window, xpos, ypos)
 
-        }
-    }
+        })
 
-    fun setMouseButtonInputListener(mouseListenerFunction: MouseInputListener) {
-        mouseButtonInputListener = object : GLFWMouseButtonCallback() {
+
+    fun setMouseButtonInputListener(mouseListenerFunction: MouseInputListener) =
+        mouseButtonInputListeners.add(object : GLFWMouseButtonCallback() {
             override fun invoke(window: Long, button: Int, action: Int, mods: Int) =
                 mouseListenerFunction(window, button, action, mods)
 
-        }
-    }
+        })
 
-    fun setScrollWheelInputListener(scrollWheelListenerFunction: CursorAndScrollWheelInputListener) {
-        scrollWheelInputListener = object : GLFWScrollCallback() {
+
+    fun setScrollWheelInputListener(scrollWheelListenerFunction: CursorAndScrollWheelInputListener) =
+        scrollWheelInputListeners.add(object : GLFWScrollCallback() {
             override fun invoke(window: Long, xoffset: Double, yoffset: Double) =
                 scrollWheelListenerFunction(window, xoffset, yoffset)
 
-        }
-    }
+        })
+
 
     fun resetInputListeners() = Window.setAllInputCallBacks(
-        keyboardInputListener,
-        cursorMovementInputListener,
-        mouseButtonInputListener,
-        scrollWheelInputListener
+        keyboardInputListeners,
+        cursorMovementInputListeners,
+        mouseButtonInputListeners,
+        scrollWheelInputListeners
     )
 
     // Start CEL
@@ -104,11 +109,12 @@ object Engine {
         running = true
 
         // Background Setup
-        windowBackgroundColor.apply {
+        _windowBackgroundColor.apply {
             GL11.glClearColor(
                 red, green,
                 blue, alpha
             )
+            glEnable(GL_DEPTH_TEST)
         }
 
         // Time Util Setup
@@ -129,9 +135,9 @@ object Engine {
 
         // Create the window
         Window.createWindow(
-            windowWidth,
-            windowHeight,
-            windowTitle
+            _windowWidth,
+            _windowHeight,
+            _windowTitle
         )
 
         // Make the OpenGL context current
