@@ -6,12 +6,15 @@ import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL30
+import org.lwjgl.openvr.Texture
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
 
 class Mesh(
     private val vertexList: MutableList<Vector>,
-    private val indexList: IntArray
+    private val indexList: IntArray,
+    private val textureCoordinates: FloatArray,
+    private val texture: Texture
 ) {
 
     init {
@@ -22,12 +25,16 @@ class Mesh(
     private var _vaoID: Int? = null
     private lateinit var _vertexBuffer: FloatBuffer
     private lateinit var _indexBuffer: IntBuffer
+    private lateinit var _textCoordsBuffer: FloatBuffer
 
     val vertexBuffer: FloatBuffer
         get() = _vertexBuffer
 
     val indexBuffer: IntBuffer
         get() = _indexBuffer
+
+    val textCoordsBuffer
+        get() = _textCoordsBuffer
 
     val vaoID: Int
         get() = _vaoID!!
@@ -41,9 +48,11 @@ class Mesh(
 
         _vertexBuffer = BufferUtils.createFloatBuffer(vertices.size)
         _indexBuffer = BufferUtils.createIntBuffer(indices.size)
+        _textCoordsBuffer = BufferUtils.createFloatBuffer(textureCoordinates.size)
 
         _vertexBuffer.put(vertices)
         _indexBuffer.put(indices)
+        _textCoordsBuffer.put(textureCoordinates)
 
         flip()
     }
@@ -52,11 +61,13 @@ class Mesh(
     private fun flip() {
         _vertexBuffer.flip()
         _indexBuffer.flip()
+        _textCoordsBuffer.flip()
     }
 
     fun clear() {
         _vertexBuffer.clear()
         _indexBuffer.clear()
+        _textCoordsBuffer.clear()
     }
 
     companion object {
@@ -101,6 +112,14 @@ class Mesh(
             GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboID)
             GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL15.GL_STATIC_DRAW)
 //            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0)
+        }
+
+        private fun bindTextCoordsBuffer(textCoordsBuffer: FloatBuffer) {
+            val vboID = GL15.glGenBuffers()
+            vbos.add(vboID)
+            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID)
+            GL15.glBufferData(GL15.GL_ARRAY_BUFFER, textCoordsBuffer, GL15.GL_STATIC_DRAW)
+            GL20.glVertexAttribPointer(1, 2, GL15.GL_FLOAT, false, 0, 0)
         }
 
         fun clean() {
