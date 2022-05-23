@@ -21,10 +21,10 @@ class Camera {
         = { _, key, _, action, _ ->
             if (action != GLFW.GLFW_RELEASE)
                 when (key) {
-                    GLFW.GLFW_KEY_W -> _position.z -= .02f
-                    GLFW.GLFW_KEY_D -> _position.x += .02f
-                    GLFW.GLFW_KEY_A -> _position.x -= .02f
-                    GLFW.GLFW_KEY_S -> _position.z += .02f
+                    GLFW.GLFW_KEY_J -> _position.z -= .02f
+                    GLFW.GLFW_KEY_L -> _position.x += .02f
+                    GLFW.GLFW_KEY_H -> _position.x -= .02f
+                    GLFW.GLFW_KEY_K -> _position.z += .02f
                 }
 
 //            _position.z -= .1f

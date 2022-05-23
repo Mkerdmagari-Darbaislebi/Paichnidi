@@ -3,8 +3,8 @@ package util
 import math.Matrix4f
 import math.Vector
 import unit.Camera
-import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 object Transformations {
 
@@ -13,7 +13,7 @@ object Transformations {
         val rotationMatrix = rotationMatrix(b)
         val scaleMatrix = scaleMatrix(c)
 
-        (translationMatrix * (rotationMatrix * scaleMatrix))
+        (scaleMatrix * (rotationMatrix * translationMatrix))
     }
 
     val cameraViewMatrix: (Camera) -> Matrix4f = { camera ->
@@ -24,7 +24,7 @@ object Transformations {
             -camera.position.z
         )
 
-        rotationMatrix * translationMatrix
+        translationMatrix * rotationMatrix
     }
 
     fun translationMatrix(v: Vector) = translationMatrix(v.x, v.y, v.z)
@@ -32,6 +32,7 @@ object Transformations {
     fun scaleMatrix(v: Vector) = scaleMatrix(v.x, v.y, v.z)
 
     val translationMatrix: TransformationFunction = { x, y, z ->
+
         val matrix = Matrix4f.IDENTITY_MATRIX
         matrix.setRow(3, floatArrayOf(x, y, z, 1.0f))
 
@@ -39,29 +40,70 @@ object Transformations {
     }
 
     val rotationMatrix: TransformationFunction = { x, y, z ->
-        val xRadians = Math.toRadians(x.toDouble()).toFloat()
-        val yRadians = Math.toRadians(y.toDouble()).toFloat()
-        val zRadians = Math.toRadians(z.toDouble()).toFloat()
-
-        val xRotationMatrix = Matrix4f.IDENTITY_MATRIX
-        xRotationMatrix.setRow(1, floatArrayOf(0.0f, cos(xRadians), -sin(xRadians), 0.0f))
-        xRotationMatrix.setRow(2, floatArrayOf(0.0f, -sin(xRadians), cos(xRadians), 0.0f))
-
-        val yRotationMatrix = Matrix4f.IDENTITY_MATRIX
-        yRotationMatrix.setRow(0, floatArrayOf(cos(yRadians), 0.0f, -sin(yRadians), 0.0f))
-        yRotationMatrix.setRow(2, floatArrayOf(sin(yRadians), 1.0f, cos(yRadians), 0.0f))
-
-        val zRotationMatrix = Matrix4f.IDENTITY_MATRIX
-        zRotationMatrix.setRow(0, floatArrayOf(cos(zRadians), sin(zRadians), 0.0f, 0.0f))
-        zRotationMatrix.setRow(1, floatArrayOf(-sin(zRadians), cos(zRadians), 0.0f, 0.0f))
-
-        zRotationMatrix * (yRotationMatrix * xRotationMatrix)
+        Matrix4f.IDENTITY_MATRIX
+            .rotX(x)
+            .rotY(y)
+            .rotZ(z)
     }
 
     val scaleMatrix: TransformationFunction = { x, y, z ->
         val matrix = Matrix4f.IDENTITY_MATRIX
         for (i in 0 until 3)
-            matrix.setValue(arrayOf(x, y, z)[i], i, i)
+            matrix[i][i] = arrayOf(x, y, z)[i]
         matrix
+    }
+
+    private fun Matrix4f.rotX(alpha: Float): Matrix4f {
+        val sin = sin(alpha)
+        val cos = cosFromSin(sin.toDouble(), 3.0).toFloat()
+
+        val firstRow = FloatArray(4) { 0f }
+        val secondRow = FloatArray(4) { 0f }
+
+        for (i in firstRow.indices) firstRow[i] = array[1][i] * cos + array[2][i] * sin
+        for (i in secondRow.indices) secondRow[i] = array[1][i] * (-sin) + array[2][i] * cos
+
+        setRow(2, secondRow)
+        setRow(1, firstRow)
+        return this
+    }
+
+    private fun Matrix4f.rotY(alpha: Float): Matrix4f {
+        val sin = sin(alpha)
+        val cos = cosFromSin(sin.toDouble(), alpha.toDouble()).toFloat()
+
+        val zeroRow = FloatArray(4) { 0f }
+        val secondRow = FloatArray(4) { 0f }
+
+        for (i in zeroRow.indices) zeroRow[i] = array[0][i] * cos + array[2][0] * (-sin)
+        for (i in secondRow.indices) secondRow[i] = array[0][i] * sin + array[2][i] * cos
+
+        setRow(2, secondRow)
+        setRow(0, zeroRow)
+        return this
+    }
+
+    private fun Matrix4f.rotZ(alpha: Float): Matrix4f {
+        val sin = sin(alpha)
+        val cos = cosFromSin(sin.toDouble(), alpha.toDouble()).toFloat()
+
+        val zeroRow = FloatArray(4) { 0f }
+        val firstRow = FloatArray(4) { 0f }
+
+        for (i in zeroRow.indices) zeroRow[i] = array[0][i] * cos + array[1][0] * sin
+        for (i in firstRow.indices) firstRow[i] = array[0][i] * (-sin) + array[1][i] * cos
+
+        setRow(1, firstRow)
+        setRow(0, zeroRow)
+        return this
+    }
+
+    private fun cosFromSin(sin: Double, alpha: Double): Double {
+        val cos = sqrt(1 - sin * sin)
+        val a = alpha + 1.5707963267948966
+        var b = a - (a / 6.283185307179586).toInt() * 6.283185307179586
+        b += (if (b < 0) 6.283185307179586 else 0.0)
+
+        return if (b >= Math.PI) -cos else cos
     }
 }

@@ -15,15 +15,28 @@ fun main(): Unit = runBlocking {
 
     // Initialize Engine
     Engine.apply {
-        setWindowWidth(1920)
-        setWindowHeight(1080)
+        setWindowWidth(1200)
+        setWindowHeight(900)
         setWindowTitle("Game Engine")
         setBackgroundColor(Color(100, 100, 120))
         init()
     }
 
+    val vertices = mutableListOf(
+        Vector(-.5f, .5f, 2f),
+        Vector(-.5f, -.5f, 2f),
+        Vector(.5f, -.5f, 2f),
+        Vector(.5f, .5f, 2f),
+    )
+
+    val indices = intArrayOf(
+        0, 1, 3,
+        3, 1, 2
+    )
+
     // Create Mesh
-    val mesh = ObjMeshLoader.load("cube.obj")
+    val mesh = ObjMeshLoader.load("KacebisKaci.obj")
+////Mesh(vertices, indices)
 
     // Create ShaderProgram
     val shaderProgram = ShaderProgramBuilder.createShaderProgram(
@@ -32,17 +45,21 @@ fun main(): Unit = runBlocking {
     )
 
     // Create Component
-    val component = Component(mesh, Vector(0f, 0f, 0f), Vector(0f, 0f, 0f), 0.7f)
+    val component = Component(mesh, Vector(0f, 0f, -10f), Vector(0f, 0f, 0f), 1f)
 
     // Add ComponentKeyListener
+    val movement = .5f
+    val rotation = .3f
     Engine.apply {
         setKeyboardInputListener { _, key, _, action, _ ->
             if (action != GLFW.GLFW_RELEASE)
                 when (key) {
-                    GLFW.GLFW_KEY_LEFT -> component.move(0f, 0f, -0.1f)
-                    GLFW.GLFW_KEY_RIGHT -> component.move(-0.1f, 0f, 0f)
-                    GLFW.GLFW_KEY_UP -> component.rotate(0f, 0.4f, 0f)
-                    GLFW.GLFW_KEY_DOWN -> component.rotate(0f, -.4f, 0f)
+                    GLFW.GLFW_KEY_Z -> { component.move(0f, 0f, -movement / 2) }
+                    GLFW.GLFW_KEY_X -> { component.move(0f, 0f, movement / 2) }
+                    GLFW.GLFW_KEY_LEFT -> component.move(-movement, 0f, 0f)
+                    GLFW.GLFW_KEY_RIGHT -> component.move(movement, 0f, 0f)
+                    GLFW.GLFW_KEY_UP -> component.move(0f, movement, 0f)
+                    GLFW.GLFW_KEY_DOWN -> component.move(0f, -movement, 0f)
                     GLFW.GLFW_KEY_SPACE -> component.setScale(listOf(.3f, .5f, .7f, 1f).random())
                 }
         }
@@ -52,7 +69,7 @@ fun main(): Unit = runBlocking {
     // Create Camera
     val camera = Camera()
     // Set DefaultCameraKeyboardInputListener
-    camera.setCameraKeyboardInputListener()
+//    camera.setCameraKeyboardInputListener()
 
     // Init And Load Projection Matrix
     Renderer.initProjectionMatrix(shaderProgram)
@@ -62,6 +79,7 @@ fun main(): Unit = runBlocking {
         // Start CEL
         Engine.start(shaderProgram) {
             shaderProgram.loadViewMatrix(camera)
+            component.rotate(0f, .03f, 0f)
             // Render Mesh
             Renderer.render(component, shaderProgram)
             Thread.sleep(5)

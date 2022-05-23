@@ -1,12 +1,12 @@
 package math
 
 class Matrix4f(
-    private var arr: Array<FloatArray> =
+    val array: Array<FloatArray> =
         Array(4) { FloatArray(4) { .0f } }
 ) : LinAlgObj {
 
     val flatten
-        get() = arr.map { it.toList() }.toList().flatten().toFloatArray()
+        get() = array.map { it.toList() }.toList().flatten().toFloatArray()
 
 
     private val areInBounds: (Int, Int) -> Boolean = { a, b ->
@@ -19,35 +19,28 @@ class Matrix4f(
     )
 
     // Getters/Setters
-    val array get() = arr
+    operator fun get(index: Int): FloatArray =
+        array[index]
 
-    val setArray: (Array<FloatArray>) -> Unit = { arr = it }
-
-    val setValue: (Float, Int, Int) -> Unit = { value, x, y ->
-        if (areInBounds(x, y))
-            arr[x][y] = value
+    val setArray: (Array<FloatArray>) -> Unit = {
+        for (i in 0 until 4) for (j in 0 until 4) array[i][j] = it[i][j]
     }
 
-    val getValue: (Int, Int) -> Float? = { x, y -> if (areInBounds(x, y)) arr[x][y] else null }
-
     val setRow: (Int, FloatArray) -> Unit = { index, row ->
-        arr[index] = row
+        array[index] = row
     }
 
     val setColumn: (Int, FloatArray) -> Unit = { index, col ->
-        for (i in 0..3) arr[i][index] = col[i]
+        for (i in 0..3) array[i][index] = col[i]
     }
 
     // Matrix Operations
-    operator fun get(index: Int): FloatArray =
-        arr[index]
-
     operator fun times(matrix: Matrix4f): Matrix4f {
         val resultArray = Array(4) { FloatArray(4) { 0f } }
         for (e in 0 until 4)
             for (i in 0 until 4)
                 for (j in 0 until 4)
-                    resultArray[e][i] += arr[e][j] * matrix.arr[j][i]
+                    resultArray[e][i] += array[e][j] * matrix.array[j][i]
         return Matrix4f(resultArray)
     }
 
@@ -68,29 +61,29 @@ class Matrix4f(
     override fun dec() = this - 1.0f
 
     operator fun plusAssign(matrix: Matrix4f) =
-        setArray((this + matrix).arr)
+        setArray((this + matrix).array)
 
     operator fun minusAssign(matrix: Matrix4f) =
-        setArray((this - matrix).arr)
+        setArray((this - matrix).array)
 
     operator fun plus(matrix: Matrix4f): Matrix4f {
-        val res = arr
+        val res = array
         for (i in 0 until 4) for (j in 0 until 4)
-            res[i][j] += matrix.arr[i][j]
+            res[i][j] += matrix.array[i][j]
         return Matrix4f(res)
     }
 
     operator fun minus(matrix: Matrix4f): Matrix4f {
-        val res = arr
+        val res = array
         for (i in 0 until 4) for (j in 0 until 4)
-            res[i][j] -= matrix.arr[i][j]
+            res[i][j] -= matrix.array[i][j]
         return Matrix4f(res)
     }
 
     infix fun dot(matrix: Matrix4f): Float {
         var res = 0f
         for (i in 0 until 4) for (j in 0 until 4)
-            res += arr[i][j] * matrix.arr[i][j]
+            res += array[i][j] * matrix.array[i][j]
         return res
     }
 

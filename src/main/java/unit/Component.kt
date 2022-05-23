@@ -7,11 +7,15 @@ import util.Transformations
 
 class Component(
     val mesh: Mesh,
-    private var position: Vector,
+    var position: Vector,
     private var rotation: Vector,
     private var scale: Float
 ) {
-    val move: (Float, Float, Float) -> Unit = { x, y, z -> position = position + Vector(x, y, z) }
+    val move: (Float, Float, Float) -> Unit = { x, y, z ->
+        position.x += x
+        position.y += y
+        position.z += z
+    }
 
     val rotate: (Float, Float, Float) -> Unit = { x, y, z -> rotation = rotation + Vector(x, y, z) }
 
