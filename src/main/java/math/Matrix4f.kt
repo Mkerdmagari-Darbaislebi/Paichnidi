@@ -1,7 +1,7 @@
 package math
 
 class Matrix4f(
-    val array: Array<FloatArray> =
+    private var arr: Array<FloatArray> =
         Array(4) { FloatArray(4) { .0f } }
 ) : LinAlgObj {
 
@@ -19,11 +19,16 @@ class Matrix4f(
     )
 
     // Getters/Setters
+    val array get() = arr
+
+    val setArray: (Array<FloatArray>) -> Unit = { arr = it }
+
     operator fun get(index: Int): FloatArray =
         array[index]
 
-    val setArray: (Array<FloatArray>) -> Unit = {
-        for (i in 0 until 4) for (j in 0 until 4) array[i][j] = it[i][j]
+    val setValue: (Float, Int, Int) -> Unit = { value, x, y ->
+        if (areInBounds(x, y))
+            arr[x][y] = value
     }
 
     val setRow: (Int, FloatArray) -> Unit = { index, row ->
