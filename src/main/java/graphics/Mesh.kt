@@ -1,7 +1,9 @@
 package graphics
 
+import TextureLoader
 import math.Vector
 import org.lwjgl.BufferUtils
+import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL15
 import org.lwjgl.opengl.GL20
@@ -12,9 +14,8 @@ import java.nio.IntBuffer
 
 class Mesh(
     private val vertexList: MutableList<Vector>,
+    private val textureCoordinates: MutableList<Vector>,
     private val indexList: IntArray,
-    private val textureCoordinates: FloatArray,
-    private val texture: Texture
 ) {
 
     init {
@@ -44,15 +45,16 @@ class Mesh(
 
     private fun storeDataInBuffer() {
         val vertices = vertexList.map { it.flatten.toList() }.flatten().toFloatArray()
+        val textures = textureCoordinates.map { it.flatten.toList().subList(0,2) }.flatten().toFloatArray()
         val indices = indexList
 
         _vertexBuffer = BufferUtils.createFloatBuffer(vertices.size)
+        _textCoordsBuffer = BufferUtils.createFloatBuffer(textures.size)
         _indexBuffer = BufferUtils.createIntBuffer(indices.size)
-        _textCoordsBuffer = BufferUtils.createFloatBuffer(textureCoordinates.size)
 
         _vertexBuffer.put(vertices)
+        _textCoordsBuffer.put(textures)
         _indexBuffer.put(indices)
-        _textCoordsBuffer.put(textureCoordinates)
 
         flip()
     }
@@ -60,28 +62,28 @@ class Mesh(
 
     private fun flip() {
         _vertexBuffer.flip()
-        _indexBuffer.flip()
         _textCoordsBuffer.flip()
+        _indexBuffer.flip()
     }
 
     fun clear() {
         _vertexBuffer.clear()
-        _indexBuffer.clear()
         _textCoordsBuffer.clear()
+        _indexBuffer.clear()
     }
 
     companion object {
 
-        private const val VERTEX_ARRAY_CARDINALITY = 3
-
         private val vaos = mutableListOf<Int>()
         private val vbos = mutableListOf<Int>()
+        private val textures = mutableListOf<Int>()
 
         private fun loadToVAO(mesh: Mesh) {
             val vaoID = createVAO()
             mesh._vaoID = vaoID
             bindIndicesBuffer(mesh.indexBuffer)
-            storeDataInAttrList(0, mesh.vertexBuffer)
+            storeDataInAttrList(0, 3,mesh.vertexBuffer)
+            storeDataInAttrList(1, 2, mesh.textCoordsBuffer)
             unbindVAO()
             mesh.clear()
         }
@@ -93,12 +95,18 @@ class Mesh(
             return vaoID
         }
 
-        private fun storeDataInAttrList(attrNumber: Int, vertexBuffer: FloatBuffer) {
+        fun loadTexture(path: String): Int{
+            val textureID = TextureLoader.loadTexture(path)
+            textures.add(textureID)
+            return textureID
+        }
+
+        private fun storeDataInAttrList(attrNumber: Int, cardinality: Int, vertexBuffer: FloatBuffer) {
             val vboID = GL15.glGenBuffers()
             vbos.add(vboID)
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID)
             GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexBuffer, GL15.GL_STATIC_DRAW)
-            GL20.glVertexAttribPointer(attrNumber, VERTEX_ARRAY_CARDINALITY, GL11.GL_FLOAT, false, 0, 0)
+            GL20.glVertexAttribPointer(attrNumber, cardinality, GL11.GL_FLOAT, false, 0, 0)
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0)
         }
 
@@ -125,6 +133,7 @@ class Mesh(
         fun clean() {
             vaos.forEach { GL30.glDeleteVertexArrays(it) }
             vbos.forEach { GL30.glDeleteBuffers(it) }
+            textures.forEach{ GL30.glDeleteBuffers(it)}
         }
     }
 }

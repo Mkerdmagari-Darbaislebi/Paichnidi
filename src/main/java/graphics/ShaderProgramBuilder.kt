@@ -37,6 +37,7 @@ object ShaderProgramBuilder {
             private var locationTransformationMatrix = -1
             private var locationProjectionMatrix = -1
             private var locationViewMatrix = -1
+            private var locationTextureSampler = -1
 
             init {
                 getAllUniformLocations()
@@ -44,6 +45,7 @@ object ShaderProgramBuilder {
 
             override fun bindAttributes() {
                 bindAttribute(0, "position")
+                bindAttribute(1, "textureCoord")
             }
 
             override fun getAllUniformLocations() {
@@ -53,6 +55,8 @@ object ShaderProgramBuilder {
                     getUniformLocation("projectionMatrix")
                 locationViewMatrix =
                     getUniformLocation("viewMatrix")
+                locationTextureSampler =
+                    getUniformLocation("textureSampler")
             }
 
             override fun loadTransformationMatrix(matrix: Matrix4f) =
@@ -65,6 +69,9 @@ object ShaderProgramBuilder {
             override fun loadViewMatrix(camera: Camera) {}
 //                loadMatrix(locationViewMatrix, Transformations.cameraViewMatrix(camera))
 
+            override fun loadTextureSampler(value: Int) {
+                loadInt(locationTextureSampler, 1)
+            }
         }
     }
 
@@ -84,6 +91,10 @@ object ShaderProgramBuilder {
             location,
             (if (value) 1f else 0f)
         )
+
+    fun loadInt(location: Int, value: Int){
+        GL20.glUniform1i(location , value)
+    }
 
     fun loadMatrix(location: Int, matrix: Matrix4f) {
         matrixBuffer.put(matrix.flatten)

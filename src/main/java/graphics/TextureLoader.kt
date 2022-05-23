@@ -10,7 +10,7 @@ object TextureLoader {
     private const val BYTES_PER_PIXEL = 4
 
     fun loadTexture(path: String): Int {
-        val image = ImageIO.read(FileInputStream(path))
+        val image = ImageIO.read(FileInputStream("$BASE_PATH$path"))
         val pixels = IntArray(image.width * image.height)
 
         image.getRGB(0, 0, image.width, image.height, pixels, 0, image.width)
