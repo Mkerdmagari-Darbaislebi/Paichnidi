@@ -9,7 +9,7 @@ class Matrix4f(
         get() = array.map { it.toList() }.toList().flatten().toFloatArray()
 
 
-    private val areInBounds: (Int, Int) -> Boolean = { a, b ->
+    val areInBounds: (Int, Int) -> Boolean = { a, b ->
         a in 0..4 && b in 0..4
     }
 
@@ -30,6 +30,8 @@ class Matrix4f(
         if (areInBounds(x, y))
             arr[x][y] = value
     }
+
+    val getValue: (Int, Int) -> Float? = { x, y -> if (areInBounds(x, y)) arr[x][y] else null }
 
     val setRow: (Int, FloatArray) -> Unit = { index, row ->
         array[index] = row

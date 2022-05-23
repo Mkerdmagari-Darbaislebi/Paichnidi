@@ -36,7 +36,7 @@ fun main(): Unit = runBlocking {
 
     // Create Mesh
     val mesh = ObjMeshLoader.load("Grass_Block.obj")
-////Mesh(vertices, indices)
+
     Mesh.loadTexture("Grass_Block.png")
     // Create ShaderProgram
     val shaderProgram = ShaderProgramBuilder.createShaderProgram(
