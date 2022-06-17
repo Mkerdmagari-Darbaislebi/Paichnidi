@@ -8,8 +8,8 @@ import util.Transformations
 class Component(
     val mesh: Mesh,
     var position: Vector,
-    private var rotation: Vector,
-    private var scale: Float
+    var rotation: Vector,
+    var scale: Float
 ) {
     val move: (Float, Float, Float) -> Unit = { x, y, z ->
         position.x += x
