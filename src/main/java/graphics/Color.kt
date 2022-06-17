@@ -13,11 +13,4 @@ data class Color(
         blue.toFloat() / 255,
         alpha
     )
-
-    fun flatten() = listOf(
-        red,
-        green,
-        blue,
-        alpha
-    )
 }

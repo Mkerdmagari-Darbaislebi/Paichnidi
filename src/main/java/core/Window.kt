@@ -25,7 +25,9 @@ object Window {
         check(GLFW.glfwInit()) { "Unable to initialize" }
     }
 
-    // ID Creation
+    /**
+     * Creates a window and its associated OpenGL or OpenGL ES context. Most of the options controlling how the window and its context should be created are specified with window hint.
+     */
     fun createWindow(
         width: Int,
         height: Int,
@@ -35,16 +37,26 @@ object Window {
         if (windowID == MemoryUtil.NULL) throw RuntimeException("Failed to create window!")
     }
 
+    /**
+     * Swaps the front and back buffers of the specified window when rendering with OpenGL or OpenGL ES. If the swap interval is greater than zero, the GPU driver waits the specified number of screen updates before swapping the buffers.
+     */
     fun render() =
         GLFW.glfwSwapBuffers(windowID)
 
 
+    /**
+     * Sets portions of every pixel in a particular buffer to the same value. The value to which each buffer is cleared depends on the setting of the clear value for that buffer
+     */
     fun update() = GL11.glClear(GL11.GL_COLOR_BUFFER_BIT or GL11.GL_DEPTH_BUFFER_BIT)
 
+    /**
+     * Processes all pending events.
+     */
     fun clean() = GLFW.glfwPollEvents()
 
-//    fun setWindowShouldClose() = GLFW.glfwSetWindowShouldClose(window, true)
-
+    /**
+     * Closes the window
+     */
     fun stop() {
         freeCallbacks()
         destroyWindow()
@@ -68,6 +80,9 @@ object Window {
 
     fun windowShouldClose() = GLFW.glfwWindowShouldClose(windowID)
 
+    /**
+     * Makes the OpenGL or OpenGL ES context of the specified window current on the calling thread. A context must only be made current on a single thread at a time and each thread can have only a single current context at a time.
+     */
     fun makeContextCurrent() =
         GLFW.glfwMakeContextCurrent(windowID)
 
@@ -75,12 +90,18 @@ object Window {
 
     fun showWindow() = GLFW.glfwShowWindow(windowID)
 
+    /**
+     * Sets Default window hints, makes it resizable
+     */
     fun configure() {
         setDefaultWindowHints()
         setHiddenAfterCreation()
         setResizable()
     }
 
+    /**
+     * Sets input callbacks
+     */
     fun setAllInputCallBacks(
         keyboardInputListener: List<GLFWKeyCallback>,
         cursorMovementInputListener: List<GLFWCursorPosCallback>,

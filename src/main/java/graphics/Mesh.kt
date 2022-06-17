@@ -1,6 +1,5 @@
 package graphics
 
-import TextureLoader
 import math.Vector
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL
@@ -12,6 +11,11 @@ import org.lwjgl.openvr.Texture
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
 
+/**
+ * @property[vertexList] List of position vectors
+ * @property[textureCoordinates] List of texture vectors
+ * @property[indexList] Adjacency array
+ */
 class Mesh(
     private val vertexList: MutableList<Vector>,
     private val textureCoordinates: MutableList<Vector>,

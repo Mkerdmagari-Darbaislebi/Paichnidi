@@ -16,7 +16,9 @@ import util.KeyboardInputListener
 import util.MouseInputListener
 import util.Time
 
-
+/**
+ * Singleton to start CEL
+ */
 object Engine {
 
     // CEL Controllers
@@ -36,19 +38,34 @@ object Engine {
     val windowTitle get() = _windowTitle
     val windowBackgroundColor get() = _windowBackgroundColor
 
-    // Window AttributeSetters
+    /**
+     * Sets background color
+     * @param[color] color to set
+     */
     fun setBackgroundColor(color: Color) {
         _windowBackgroundColor = color
     }
 
+    /**
+     * Sets window width
+     * @param[width] width to set
+     */
     fun setWindowWidth(width: Int) {
         _windowWidth = width
     }
 
+    /**
+     * Sets window height
+     * @param[height] height to set
+     */
     fun setWindowHeight(height: Int) {
         _windowHeight = height
     }
 
+    /**
+     * Sets window title
+     * @param[title] title to set
+     */
     fun setWindowTitle(title: String) {
         _windowTitle = title
     }
@@ -60,7 +77,10 @@ object Engine {
     private var mouseButtonInputListeners: MutableList<GLFWMouseButtonCallback> = mutableListOf()
     private var scrollWheelInputListeners: MutableList<GLFWScrollCallback> = mutableListOf()
 
-    // InputListenerSetters
+    /**
+     * Adds keyboard input listener
+     * @param[keyListenerFunction] callback
+     */
     fun setKeyboardInputListener(keyListenerFunction: KeyboardInputListener) =
         keyboardInputListeners.add(object : GLFWKeyCallback() {
             override operator fun invoke(window: Long, key: Int, scancode: Int, action: Int, mods: Int) =
@@ -69,6 +89,10 @@ object Engine {
         })
 
 
+    /**
+     * Adds cursor movement input listener
+     * @param[cursorListenerFunction] callback
+     */
     fun setCursorMovementInputListener(cursorListenerFunction: CursorAndScrollWheelInputListener) =
         cursorMovementInputListeners.add(object : GLFWCursorPosCallback() {
             override operator fun invoke(window: Long, xpos: Double, ypos: Double) =
@@ -77,6 +101,10 @@ object Engine {
         })
 
 
+    /**
+     * Adds mouse button input listener
+     * @param[mouseListenerFunction] callback
+     */
     fun setMouseButtonInputListener(mouseListenerFunction: MouseInputListener) =
         mouseButtonInputListeners.add(object : GLFWMouseButtonCallback() {
             override fun invoke(window: Long, button: Int, action: Int, mods: Int) =
@@ -85,6 +113,10 @@ object Engine {
         })
 
 
+    /**
+     * Adds scroll whell input listener
+     * @param[scrollWheelListenerFunction] callback
+     */
     fun setScrollWheelInputListener(scrollWheelListenerFunction: CursorAndScrollWheelInputListener) =
         scrollWheelInputListeners.add(object : GLFWScrollCallback() {
             override fun invoke(window: Long, xoffset: Double, yoffset: Double) =
@@ -93,6 +125,9 @@ object Engine {
         })
 
 
+    /**
+     * Clears all input listeners
+     */
     fun resetInputListeners() = Window.setAllInputCallBacks(
         keyboardInputListeners,
         cursorMovementInputListeners,
@@ -100,7 +135,11 @@ object Engine {
         scrollWheelInputListeners
     )
 
-    // Start CEL
+    /**
+     * Starts CEL
+     * @param[shaderProgram] handles shading
+     * @param[action] game itself
+     */
     fun start(
         shaderProgram: ShaderProgram,
         action: () -> Unit
@@ -168,6 +207,9 @@ object Engine {
 
     }
 
+    /**
+     * Stops CEL
+     */
     private fun handleExit() = Window.apply {
         if (windowShouldClose()) {
             running = false
@@ -175,7 +217,11 @@ object Engine {
         }
     }
 
-    // CEL
+    /**
+     * CEL
+     * @param[shaderProgram] to start and end shaderProgram
+     * @param[action] game logic
+     */
     private fun coreEngineLoop(
         shaderProgram: ShaderProgram,
         action: () -> Unit
