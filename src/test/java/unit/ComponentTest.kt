@@ -1,11 +1,27 @@
 package unit
 
+import core.Engine
+import graphics.Color
 import graphics.loaders.ObjMeshLoader
 import math.Vector
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
+
 
 internal class ComponentTest {
+
+    @BeforeEach
+    fun init() {
+        Engine.apply {
+            setWindowWidth(1200)
+            setWindowHeight(900)
+            setWindowTitle("Game Engine")
+            setBackgroundColor(Color(100, 100, 120))
+            init()
+        }
+    }
 
     @Test
     fun getMove() {
@@ -13,10 +29,13 @@ internal class ComponentTest {
             ObjMeshLoader.load("Grass_Block.obj"),
             Vector(1.1f, 4.1f, 4.9f),
             Vector(0.5f, -0.75f, 0.65f),
-            2.3f)
+            2.3f
+        )
 
         testObj.move(1.1f, 1.2f, 1.3f)
-        Assertions.assertEquals(Vector(2.2f,5.3f,6.2f), testObj.position)
+        assertEquals(2.2f, testObj.position.x)
+        assertEquals(5.3f, testObj.position.y)
+        assertEquals(6.2f, testObj.position.z)
     }
 
     @Test
@@ -25,10 +44,13 @@ internal class ComponentTest {
             ObjMeshLoader.load("Grass_Block.obj"),
             Vector(1.1f, 4.1f, 4.9f),
             Vector(0.5f, -0.75f, 0.65f),
-            2.3f)
+            2.3f
+        )
         val res = testObj.rotation + Vector(1.1f, 1.2f, 1.3f)
         testObj.rotate(1.1f, 1.2f, 1.3f)
-        Assertions.assertEquals(res, testObj.rotation)
+        assertEquals(res.x, testObj.rotation.x)
+        assertEquals(res.y, testObj.rotation.y)
+        assertEquals(res.z, testObj.rotation.z)
     }
 
     @Test
@@ -37,7 +59,8 @@ internal class ComponentTest {
             ObjMeshLoader.load("Grass_Block.obj"),
             Vector(1.1f, 4.1f, 4.9f),
             Vector(0.5f, -0.75f, 0.65f),
-            2.3f)
+            2.3f
+        )
 
         testObj.setScale(2.5f)
         Assertions.assertEquals(2.5f, testObj.scale)

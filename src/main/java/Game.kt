@@ -22,17 +22,17 @@ fun main(): Unit = runBlocking {
         init()
     }
 
-    val vertices = mutableListOf(
-        Vector(-.5f, .5f, 2f),
-        Vector(-.5f, -.5f, 2f),
-        Vector(.5f, -.5f, 2f),
-        Vector(.5f, .5f, 2f),
-    )
+//    val vertices = mutableListOf(
+//        Vector(-.5f, .5f, 2f),
+//        Vector(-.5f, -.5f, 2f),
+//        Vector(.5f, -.5f, 2f),
+//        Vector(.5f, .5f, 2f),
+//    )
 
-    val indices = intArrayOf(
-        0, 1, 3,
-        3, 1, 2
-    )
+//    val indices = intArrayOf(
+//        0, 1, 3,
+//        3, 1, 2
+//    )
 
     // Create Mesh
     val mesh = ObjMeshLoader.load("Grass_Block.obj")
