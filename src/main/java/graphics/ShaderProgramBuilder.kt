@@ -66,8 +66,8 @@ object ShaderProgramBuilder {
             override fun loadProjectionMatrix(matrix: Matrix4f) =
                 loadMatrix(locationProjectionMatrix, matrix)
 
-            override fun loadViewMatrix(camera: Camera) {}
-//                loadMatrix(locationViewMatrix, Transformations.cameraViewMatrix(camera))
+            override fun loadViewMatrix(camera: Camera) =
+                loadMatrix(locationViewMatrix, Transformations.cameraViewMatrix(camera))
 
             override fun loadTextureSampler(value: Int) {
                 loadInt(locationTextureSampler, 1)

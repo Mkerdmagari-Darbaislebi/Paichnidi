@@ -35,7 +35,7 @@ fun main(): Unit = runBlocking {
     )
 
     // Create Mesh
-    val mesh = ObjMeshLoader.load("Grass_Block.obj")
+    val mesh = ObjMeshLoader.load("KacebisKaci.obj")
 
     Mesh.loadTexture("Grass_Block.png")
     // Create ShaderProgram
@@ -45,7 +45,7 @@ fun main(): Unit = runBlocking {
     )
 
     // Create Component
-    val component = Component(mesh, Vector(0f, 0f, -10f), Vector(0f, 0f, 66f), 1f)
+    val component = Component(mesh, Vector(0f, 0f, -20f), Vector(0f, 0f, 0f), 1f)
 
     // Add ComponentKeyListener
     val movement = .5f
@@ -54,8 +54,12 @@ fun main(): Unit = runBlocking {
         setKeyboardInputListener { _, key, _, action, _ ->
             if (action != GLFW.GLFW_RELEASE)
                 when (key) {
-                    GLFW.GLFW_KEY_Z -> { component.move(0f, 0f, -movement / 2) }
-                    GLFW.GLFW_KEY_X -> { component.move(0f, 0f, movement / 2) }
+                    GLFW.GLFW_KEY_Z -> {
+                        component.move(0f, 0f, -movement / 2)
+                    }
+                    GLFW.GLFW_KEY_X -> {
+                        component.move(0f, 0f, movement / 2)
+                    }
                     GLFW.GLFW_KEY_LEFT -> component.move(-movement, 0f, 0f)
                     GLFW.GLFW_KEY_RIGHT -> component.move(movement, 0f, 0f)
                     GLFW.GLFW_KEY_UP -> component.move(0f, movement, 0f)
@@ -66,10 +70,12 @@ fun main(): Unit = runBlocking {
         resetInputListeners()
     }
 
-    // Create Camera
+
+//     Create Camera
     val camera = Camera()
+    camera.setCameraKeyboardInputListener()
     // Set DefaultCameraKeyboardInputListener
-//    camera.setCameraKeyboardInputListener()
+    camera.setCameraKeyboardInputListener()
 
     // Init And Load Projection Matrix
     Renderer.initProjectionMatrix(shaderProgram)
