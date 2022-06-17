@@ -1,3 +1,5 @@
+package graphics
+
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.GL_UNPACK_ALIGNMENT
@@ -6,9 +8,14 @@ import java.io.FileInputStream
 import javax.imageio.ImageIO
 
 object TextureLoader {
+
     private const val BASE_PATH = "src/main/resources/textures/"
     private const val BYTES_PER_PIXEL = 4
 
+    /**
+     * Creates texture buffer from given file
+     * @param[path] texture image path
+     */
     fun loadTexture(path: String): Int {
         val image = ImageIO.read(FileInputStream("$BASE_PATH$path"))
         val pixels = IntArray(image.width * image.height)

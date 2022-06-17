@@ -1,6 +1,7 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.5.10'
     id 'java'
+    id 'org.jetbrains.dokka' version '1.6.21'
 }
 
 group 'org.example'
@@ -12,6 +13,7 @@ repositories {
 }
 
 dependencies {
+    dokkaHtmlPlugin('org.jetbrains.dokka:kotlin-as-java-plugin:1.6.21')
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'

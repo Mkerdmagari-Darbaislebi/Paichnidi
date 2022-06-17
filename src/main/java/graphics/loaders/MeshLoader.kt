@@ -3,5 +3,9 @@ package graphics.loaders
 import graphics.Mesh
 
 interface MeshLoader {
-    fun load(path : String) : Mesh
+    /**
+     * Loads mesh from a file
+     * @param[path] mesh file path
+     */
+    fun load(path: String): Mesh
 }
